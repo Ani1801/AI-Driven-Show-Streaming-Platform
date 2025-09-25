@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeVision - Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        min-height: 100vh;
+        color: #ffffff;
+        overflow-x: hidden;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 3rem;
+        background: rgba(26, 26, 46, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(51, 224, 178, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        transition: all 0.3s ease;
+    }
+
+    .logo {
+        font-family: 'Montserrat', sans-serif;
+        color: #33E0B2;
+        font-size: 2rem;
+        font-weight: 900;
+        text-shadow: 0 0 30px rgba(51, 224, 178, 0.3);
+        letter-spacing: -0.5px;
+    }
+
+    .search-bar {
+        flex: 1;
+        max-width: 600px;
+        margin: 0 3rem;
+        position: relative;
+    }
+
+    .search-input {
+        width: 100%;
+        background: rgba(20, 20, 35, 0.8);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50px;
+        padding: 14px 60px 14px 24px;
+        color: #ffffff;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s ease;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .search-input:focus {
+        border-color: #33E0B2;
+        box-shadow: 0 0 0 4px rgba(51, 224, 178, 0.1);
+        background: rgba(20, 20, 35, 1);
+    }
+
+    .search-btn {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #33E0B2;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .search-btn:hover {
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .sign-up-btn {
+        background: linear-gradient(135deg, #33E0B2, #2BC4A0);
+        border: none;
+        border-radius: 50px;
+        padding: 14px 28px;
+        color: #ffffff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Montserrat', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9rem;
+    }
+
+    .sign-up-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(51, 224, 178, 0.4);
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+    }
+
+    .main-container {
+        display: flex;
+        min-height: calc(100vh - 100px);
+    }
+
+    .sidebar {
+        width: 280px;
+        background: rgba(20, 20, 35, 0.95);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(51, 224, 178, 0.1);
+        padding: 2rem 0;
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+    }
+
+    .logo-container {
+        padding: 0 2rem 2rem 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .logo-container h1 {
+        color: #33E0B2;
+        font-size: 1.8rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 20px rgba(51, 224, 178, 0.3);
+    }
+
+    .greeting-text {
+        color: #8892b0;
+        font-size: 1.2rem;
+        margin-top: 0.5rem;
+    }
+
+    .nav-menu {
+        list-style: none;
+        padding: 0 1rem;
+    }
+
+    .nav-item {
+        margin-bottom: 0.5rem;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        color: #8892b0;
+        text-decoration: none;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-link::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 0;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(51, 224, 178, 0.1), transparent);
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::before,
+    .nav-link.active::before {
+        width: 100%;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+        color: #33E0B2;
+        background: rgba(51, 224, 178, 0.05);
+        transform: translateX(8px);
+    }
+
+    .nav-icon {
+        width: 20px;
+        height: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover .nav-icon,
+    .nav-link.active .nav-icon {
+        transform: scale(1.1);
+    }
+
+    .content {
+        flex: 1;
+        padding: 3rem;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(20, 20, 35, 0.8));
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(51, 224, 178, 0.1);
+        border-radius: 32px;
+        padding: 3rem;
+        margin-bottom: 3rem;
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        animation: slideInLeft 0.8s ease-out;
+    }
+
+    .profile-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #33E0B2, #2BC4A0, #33E0B2);
+        background-size: 200% 100%;
+        animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+        0%, 100% { background-position: 200% 0; }
+        50% { background-position: -200% 0; }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .profile-avatar {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #33E0B2, #2BC4A0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(51, 224, 178, 0.3);
+        transition: all 0.3s ease;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .profile-avatar:hover {
+        transform: scale(1.05);
+        box-shadow: 0 25px 50px rgba(51, 224, 178, 0.4);
+    }
+
+    .profile-info h1 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        color: #ffffff;
+        font-weight: 700;
+        letter-spacing: -1px;
+    }
+
+    .profile-info p {
+        color: #8892b0;
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+
+    .profile-stats {
+        display: flex;
+        gap: 3rem;
+        margin-top: 1.5rem;
+    }
+
+    .stat {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(51, 224, 178, 0.1);
+        border-radius: 16px;
+        min-width: 100px;
+        transition: all 0.3s ease;
+    }
+
+    .stat:hover {
+        background: rgba(51, 224, 178, 0.2);
+        transform: translateY(-4px);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #33E0B2;
+        font-family: 'Montserrat', sans-serif;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #8892b0;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .profile-section {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(20, 20, 35, 0.8));
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(51, 224, 178, 0.1);
+        border-radius: 24px;
+        padding: 2.5rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-section:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        border-color: rgba(51, 224, 178, 0.3);
+    }
+
+    .section-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-weight: 700;
+    }
+
+    .section-title svg {
+        color: #33E0B2;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        color: #8892b0;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-input {
+        width: 100%;
+        background: rgba(20, 20, 35, 0.8);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 16px 20px;
+        color: #ffffff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        outline: none;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .form-input:focus {
+        border-color: #33E0B2;
+        box-shadow: 0 0 0 4px rgba(51, 224, 178, 0.1);
+        background: rgba(20, 20, 35, 1);
+    }
+
+    .btn {
+        background: linear-gradient(135deg, #33E0B2, #2BC4A0);
+        border: none;
+        border-radius: 16px;
+        padding: 16px 32px;
+        color: #ffffff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Montserrat', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9rem;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 35px rgba(51, 224, 178, 0.4);
+    }
+
+    .btn-secondary {
+        background: rgba(20, 20, 35, 0.8);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-secondary:hover {
+        border-color: #33E0B2;
+        background: rgba(51, 224, 178, 0.1);
+        box-shadow: 0 10px 25px rgba(51, 224, 178, 0.2);
+    }
+
+    .recently-watched {
+        margin-bottom: 3rem;
+    }
+
+    .content-row {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        padding: 1rem 0;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .content-row::-webkit-scrollbar {
+        display: none;
+    }
+
+    .content-card {
+        min-width: 200px;
+        background: rgba(20, 20, 35, 0.8);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .content-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .content-poster {
+        width: 100%;
+        height: 280px;
+        background: linear-gradient(135deg, #33E0B2, #2BC4A0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-weight: 900;
+        font-size: 1.2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .content-info {
+        padding: 1.5rem;
+    }
+
+    .content-info h4 {
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .content-info p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+        margin-top: 1rem;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #33E0B2, #2BC4A0);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+    }
+
+    .preferences-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .preference-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        background: rgba(20, 20, 35, 0.6);
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .preference-item:hover {
+        background: rgba(51, 224, 178, 0.1);
+    }
+
+    .toggle-switch {
+        position: relative;
+        width: 60px;
+        height: 30px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .toggle-switch.active {
+        background: #33E0B2;
+    }
+
+    .toggle-switch::before {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 24px;
+        height: 24px;
+        background: #ffffff;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    .toggle-switch.active::before {
+        transform: translateX(30px);
+    }
+
+    .loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .slide-up {
+        animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header {
+            padding: 1rem 1.5rem;
+        }
+
+        .search-bar {
+            margin: 0 1rem;
+        }
+
+        .main-container {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
+            padding: 1rem 0;
+            position: static;
+            border-right: none;
+            border-bottom: 1px solid rgba(51, 224, 178, 0.1);
+        }
+
+        .logo-container {
+            display: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            padding: 0 1rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            border-bottom: 4px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            transform: translateX(0);
+            border-bottom-color: #33E0B2;
+            background: rgba(51, 224, 178, 0.1);
+        }
+
+        .content {
+            padding: 2rem 1.5rem;
+        }
+
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 2rem;
+        }
+
+        .profile-stats {
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .content-row {
+            gap: 1rem;
+        }
+
+        .content-card {
+            min-width: 160px;
+        }
+
+        .content-poster {
+            height: 220px;
+        }
+    }
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">PrimeVision</div>
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search movies, shows, actors...">
+            <button class="search-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+            </button>
+        </div>
+        <button class="sign-up-btn" id="signOutBtn">Sign Out</button>
+    </header>
+
+    <div class="main-container container">
+        <nav class="sidebar">
+            <div class="logo-container">
+                <h1>PrimeVision</h1>
+                <p class="greeting-text">My Profile</p>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9,22 9,12 15,12 15,22" />
+                        </svg>
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="explore.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        Explore
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="favourites.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                        Favourites
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profile.html" class="nav-link active">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                        </svg>
+                        Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="subscription.html" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24">
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82V9a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                        </svg>
+                        Subscription
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileInitials">PV</div>
+                <div class="profile-info">
+                    <h1 id="profileName">Your Name</h1>
+                    <p id="profileSubText">Update your profile to get personalized recommendations</p>
+                </div>
+            </div>
+
+            <div class="profile-sections">
+                <div class="profile-section">
+                    <h2 class="section-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Account Information
+                    </h2>
+                    <form id="accountForm">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" id="fullName" class="form-input" placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" id="email" class="form-input" placeholder="you@example.com" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="phone" class="form-input" placeholder="Enter your phone number">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Avatar URL</label>
+                            <input type="url" id="avatarUrl" class="form-input" placeholder="https://...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Bio</label>
+                            <input type="text" id="bio" class="form-input" placeholder="Tell us something about you">
+                        </div>
+                        <button type="submit" class="btn">Update Profile</button>
+                    </form>
+                </div>
+
+                <div class="profile-section">
+                    <h2 class="section-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        Security Settings
+                    </h2>
+                    <form>
+                        <div class="form-group">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" class="form-input" placeholder="Enter current password">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-input" placeholder="Enter new password">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-input" placeholder="Confirm new password">
+                        </div>
+                        <button type="submit" class="btn">Change Password</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="profile-section recently-watched">
+                <h2 class="section-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5,3 19,12 5,21"/>
+                    </svg>
+                    Continue Watching
+                </h2>
+                <div class="content-row">
+                    <div class="content-card">
+                        <div class="content-poster">TW</div>
+                        <div class="content-info">
+                            <h4>The Witcher</h4>
+                            <p>S3 E4 • 32 min left</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card">
+                        <div class="content-poster">ST</div>
+                        <div class="content-info">
+                            <h4>Stranger Things</h4>
+                            <p>S4 E9 • 18 min left</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card">
+                        <div class="content-poster">TC</div>
+                        <div class="content-info">
+                            <h4>The Crown</h4>
+                            <p>S5 E2 • 45 min left</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 25%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card">
+                        <div class="content-poster">DU</div>
+                        <div class="content-info">
+                            <h4>Dune</h4>
+                            <p>Movie • 1h 23m left</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <!-- Preferences removed for now for a clean new-user profile -->
+            </div>
+
+            <!-- Watchlist section removed (dummy data) for clean slate -->
+        </main>
+    </div>
+
+    <script>
+        const accountForm = document.getElementById('accountForm');
+        accountForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+            const submitBtn = accountForm.querySelector('.btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Updating...';
+                submitBtn.classList.add('loading');
+                
+            const payload = {
+                fullName: document.getElementById('fullName').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                avatarUrl: document.getElementById('avatarUrl').value.trim(),
+                bio: document.getElementById('bio').value.trim(),
+            };
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                alert('Please sign in again.');
+                window.location.href = 'login.html';
+                return;
+            }
+            try {
+                const res = await fetch('http://localhost:5000/users/me', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    localStorage.setItem('user_full_name', data.user.fullName || '');
+                    localStorage.setItem('user_phone', data.user.phone || '');
+                    localStorage.setItem('user_avatar', data.user.avatarUrl || '');
+                    localStorage.setItem('user_bio', data.user.bio || '');
+                    updateHeaderFromUser(data.user);
+                    showNotification('Profile updated successfully!');
+                    accountForm.reset();
+                    // Reload latest data to repopulate (including email)
+                    await loadProfile();
+                } else {
+                    alert(data.message || 'Failed to update profile');
+                }
+            } catch (err) {
+                alert('Server error while updating profile');
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.classList.remove('loading');
+            }
+        });
+
+        const searchInput = document.querySelector('.search-input');
+        const searchBtn = document.querySelector('.search-btn');
+
+        function performSearch() {
+            const query = searchInput.value.trim();
+            if (query) {
+                showNotification(`Searching for: ${query}`);
+                searchBtn.style.transform = 'translateY(-50%) rotate(360deg)';
+                setTimeout(() => {
+                    searchBtn.style.transform = 'translateY(-50%) rotate(0deg)';
+                }, 500);
+            }
+        }
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        searchBtn.addEventListener('click', performSearch);
+
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+            const isActive = element.classList.contains('active');
+            const preferenceText = element.parentElement.querySelector('span').textContent;
+            showNotification(`${preferenceText} ${isActive ? 'enabled' : 'disabled'}`);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #33E0B2, #2BC4A0);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideInRight 0.3s ease-out;
+                box-shadow: 0 10px 25px rgba(51, 224, 178, 0.3);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            @keyframes slideOutRight {
+                from {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.querySelectorAll('.content-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const title = card.querySelector('h4').textContent;
+                showNotification(`Opening ${title}...`);
+            });
+        });
+
+        document.querySelectorAll('.content-row').forEach(row => {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            row.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - row.offsetLeft;
+                scrollLeft = row.scrollLeft;
+                row.style.cursor = 'grabbing';
+            });
+
+            row.addEventListener('mouseleave', () => {
+                isDown = false;
+                row.style.cursor = 'grab';
+            });
+
+            row.addEventListener('mouseup', () => {
+                isDown = false;
+                row.style.cursor = 'grab';
+            });
+
+            row.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - row.offsetLeft;
+                const walk = (x - startX) * 2;
+                row.scrollLeft = scrollLeft - walk;
+            });
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.profile-section, .content-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        function initialsFromName(name){
+            if(!name) return 'PV';
+            const parts = name.trim().split(/\s+/);
+            const first = parts[0] ? parts[0][0] : '';
+            const second = parts[1] ? parts[1][0] : '';
+            return (first + second).toUpperCase() || 'PV';
+        }
+
+        async function loadProfile(){
+            const token = localStorage.getItem('auth_token');
+            if(!token){
+                window.location.href = 'login.html';
+                return;
+            }
+            // Pre-fill from localStorage while fetching fresh data
+            const cachedName = localStorage.getItem('user_full_name') || '';
+            const cachedEmail = localStorage.getItem('user_email') || '';
+            const cachedPhone = localStorage.getItem('user_phone') || '';
+            const cachedAvatar = localStorage.getItem('user_avatar') || '';
+            const cachedBio = localStorage.getItem('user_bio') || '';
+            document.getElementById('fullName').value = cachedName;
+            document.getElementById('email').value = cachedEmail;
+            document.getElementById('phone').value = cachedPhone;
+            document.getElementById('avatarUrl').value = cachedAvatar;
+            document.getElementById('bio').value = cachedBio;
+            updateHeaderFromUser({ fullName: cachedName });
+
+            try{
+                const res = await fetch('http://localhost:5000/users/me', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if(res.ok && data.user){
+                    const u = data.user;
+                    document.getElementById('fullName').value = u.fullName || '';
+                    document.getElementById('email').value = u.email || '';
+                    document.getElementById('phone').value = u.phone || '';
+                    document.getElementById('avatarUrl').value = u.avatarUrl || '';
+                    document.getElementById('bio').value = u.bio || '';
+                    localStorage.setItem('user_full_name', u.fullName || '');
+                    localStorage.setItem('user_email', u.email || '');
+                    localStorage.setItem('user_phone', u.phone || '');
+                    localStorage.setItem('user_avatar', u.avatarUrl || '');
+                    localStorage.setItem('user_bio', u.bio || '');
+                    updateHeaderFromUser(u);
+                }
+            }catch(err){
+                // ignore
+            }
+        }
+
+        function updateHeaderFromUser(user){
+            const name = user && user.fullName ? user.fullName : '';
+            document.getElementById('profileName').textContent = name || 'Your Name';
+            document.getElementById('profileInitials').textContent = initialsFromName(name);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProfile);
+        // Shared greeting on this page too
+        (function(){
+            function timeOfDay(){
+                const h = new Date().getHours();
+                if (h < 12) return 'Good morning';
+                if (h < 17) return 'Good afternoon';
+                return 'Good evening';
+            }
+            function firstNameOf(n){ return n ? n.trim().split(/\s+/)[0] : ''; }
+            function setGreeting(){
+                const name = localStorage.getItem('user_full_name') || '';
+                const greeting = name ? `${timeOfDay()}, ${firstNameOf(name)}` : `${timeOfDay()}!`;
+                const el = document.querySelector('.logo-container p.greeting-text, .logo-container p');
+                if (el) el.textContent = greeting;
+            }
+            setGreeting();
+        })();
+        const signOutBtn = document.getElementById('signOutBtn');
+        if (signOutBtn) {
+            signOutBtn.addEventListener('click', () => {
+                try { localStorage.removeItem('auth_token'); } catch(e) {}
+                window.location.href = 'login.html';
+            });
+        }
+    </script>
+</body>
+</html>

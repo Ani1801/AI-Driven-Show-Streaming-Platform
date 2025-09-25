@@ -1,0 +1,3382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeVision - AI-Powered Streaming Platform</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Removed hide/dislike/toggle description behaviors for cleaner UI
+    </script>
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Align title and hide button horizontally */
+        .title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 228.8px;
+            /* Optional if you want to constrain width here */
+            height: 32px;
+            /* Maintain your fixed height */
+            overflow: hidden;
+        }
+
+        /* Movie title styling */
+        .movie-title1 {
+            font-size: 20px;
+            margin: 0;
+            color: #fff;
+
+            flex: 1 1 auto;
+            /* Allow it to grow and shrink */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+            /* Required for ellipsis inside flex container */
+        }
+
+        /* Removed legacy hide/toggle UI styles */
+
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 280px;
+            height: 80px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(51, 224, 178, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 12px 50px 12px 20px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #33E0B2;
+            box-shadow: 0 0 0 3px rgba(51, 224, 178, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #8892b0;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #8892b0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .search-btn:hover {
+            color: #33E0B2;
+        }
+
+        /* Search Results Dropdown */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 224, 178, 0.2);
+            border-radius: 12px;
+            margin-top: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .search-result-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-result-item:hover {
+            background: rgba(51, 224, 178, 0.1);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .search-result-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .search-result-info h4 {
+            color: #ffffff;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .search-result-info p {
+            color: #8892b0;
+            font-size: 0.8rem;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .auth-btn {
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .signin-btn {
+            background: transparent;
+            color: #8892b0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .signin-btn:hover {
+            color: #33E0B2;
+            border-color: #33E0B2;
+        }
+
+        .signup-btn {
+            background: linear-gradient(135deg, #33E0B2, #2BC4A0);
+            color: #ffffff;
+        }
+
+        .signup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(51, 224, 178, 0.3);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(20, 20, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(51, 224, 178, 0.1);
+            padding: 2rem 0;
+            z-index: 101;
+            transition: all 0.3s ease;
+        }
+
+        .logo-container {
+            padding: 0 2rem 2rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .logo-container h1 {
+            color: #33E0B2;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(51, 224, 178, 0.3);
+        }
+
+        .logo-container p {
+            color: #8892b0;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0 1rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: #8892b0;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(51, 224, 178, 0.1);
+            color: #33E0B2;
+            transform: translateX(5px);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 80px;
+            padding: 2rem;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Hero Slider Section */
+        .hero-section {
+            position: relative;
+            height: 500px;
+            border-radius: 24px;
+            margin-bottom: 3rem;
+            overflow: hidden;
+            border: 1px solid rgba(51, 224, 178, 0.2);
+        }
+
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(51, 224, 178, 0.1) 0%, rgba(43, 196, 160, 0.05) 100%);
+            display: flex;
+            align-items: center;
+            padding: 3rem;
+            opacity: 0;
+            /* Enhanced slide transitions with transform and improved easing */
+            transform: translateX(100px);
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            visibility: hidden;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            visibility: visible;
+        }
+
+        /* Added slide-out animation for smoother transitions */
+        .hero-slide.slide-out {
+            opacity: 0;
+            transform: translateX(-100px);
+            visibility: hidden;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Enhanced text animations with staggered entrance */
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #33E0B2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition-delay: 0.3s;
+        }
+
+        .hero-slide.active .hero-text h1 {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: #8892b0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition-delay: 0.5s;
+        }
+
+        .hero-slide.active .hero-text p {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition-delay: 0.7s;
+        }
+
+        .hero-slide.active .hero-buttons {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .hero-btn {
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            /* Enhanced button transitions with smoother easing */
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Added ripple effect for buttons */
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .hero-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Add to Favourites pill button */
+        .add-fav-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(51,224,178,0.3);
+            background: rgba(51,224,178,0.12);
+            color: #33E0B2;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .add-fav-pill:hover { transform: translateY(-2px); background: rgba(51,224,178,0.18); box-shadow: 0 8px 24px rgba(51,224,178,0.25); }
+        .add-fav-pill svg { width: 18px; height: 18px; }
+        .add-fav-pill.added { background: rgba(76, 217, 100, 0.18); color: #4CD964; border-color: rgba(76, 217, 100, 0.35); }
+        .toast {
+            position: fixed; top: 20px; right: 20px; z-index: 2000;
+            background: linear-gradient(135deg, #33E0B2, #2BC4A0); color: #fff;
+            padding: 12px 16px; border-radius: 10px; font-weight: 600;
+            box-shadow: 0 12px 30px rgba(51,224,178,0.35); opacity: 0; transform: translateY(-10px);
+            transition: opacity .2s ease, transform .2s ease;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #33E0B2, #2BC4A0);
+            color: #ffffff;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(51, 224, 178, 0.4);
+        }
+
+        .secondary-btn {
+            background: transparent;
+            color: #8892b0;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .secondary-btn:hover {
+            color: #33E0B2;
+            border-color: #33E0B2;
+            background: rgba(51, 224, 178, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .hero-image {
+            position: relative;
+            text-align: center;
+            transform: translateX(50px);
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition-delay: 0.4s;
+        }
+
+        .hero-slide.active .hero-image {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .hero-character {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            /* Enhanced image hover with smoother scaling and glow effect */
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .hero-character:hover {
+            transform: scale(1.08) rotateY(5deg);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(51, 224, 178, 0.2);
+        }
+
+        .toggle-desc-btn {
+            background-color: #1A1A2EF2;
+            color: #8892b0;
+            border: none;
+            /* padding: 8px 16px; */
+            padding-top: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            border-radius: 4px;
+            user-select: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-desc-btn:hover {
+            background-color: #1A1A2EF2;
+        }
+
+        .toggle-desc-btn .arrow {
+            display: inline-block;
+            margin-left: 8px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #8892b0;
+            transition: transform 0.3s ease;
+        }
+
+        /* Rotate arrow when active (description visible) */
+        .toggle-desc-btn.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Slider Navigation */
+        .slider-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            /* Enhanced dot transitions with smoother scaling */
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        /* Added pulse animation for active dot */
+        .slider-dot.active {
+            background: #33E0B2;
+            transform: scale(1.3);
+            box-shadow: 0 0 15px rgba(51, 224, 178, 0.5);
+        }
+
+        .slider-dot.active::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 2px solid rgba(51, 224, 178, 0.3);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* Added pulse keyframe animation */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .slider-dot:hover {
+            background: rgba(51, 224, 178, 0.7);
+            transform: scale(1.2);
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .view-all {
+            color: #33E0B2;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .view-all:hover {
+            color: #2BC4A0;
+            text-shadow: 0 0 8px rgba(51, 224, 178, 0.5);
+        }
+
+        /* Movie Cards Grid */
+        .movies-grid {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 1rem 0;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar styling */
+        .movies-grid::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .movies-grid::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .movies-grid::-webkit-scrollbar-thumb {
+            background: #33E0B2;
+            border-radius: 4px;
+        }
+
+        .movies-grid::-webkit-scrollbar-thumb:hover {
+            background: #2BC4A0;
+        }
+
+        .movie-card {
+            background: rgba(26, 26, 46, 0.8);
+            border: 2px solid #33E0B2;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(51, 224, 178, 0.1);
+            flex: 0 0 280px;
+            /* Fixed width, no shrinking */
+            min-width: 280px;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(51, 224, 178, 0.2);
+        }
+
+        /* Enhanced glow effect for movie cards */
+        .movie-card:hover .movie-poster img {
+            transform: scale(1.1);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .movie-card:hover .movie-poster img {
+            transform: scale(1.1);
+        }
+
+        .movie-info {
+            padding: 1.5rem;
+        }
+
+        .movie-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .movie-genre {
+            color: #8892b0;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .movie-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #33E0B2;
+            font-weight: 500;
+        }
+
+        /* Continue Watching Section */
+        .continue-watching {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .continue-card {
+            background: rgba(26, 26, 46, 0.8);
+            border: 2px solid #33E0B2;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(51, 224, 178, 0.1);
+        }
+
+        .continue-card:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 15px 30px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(51, 224, 178, 0.2);
+        }
+
+        .continue-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .continue-poster {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .continue-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .continue-details h4 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .continue-details p {
+            color: #8892b0;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #33E0B2, #2BC4A0);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .navbar {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .movies-grid {
+                gap: 1rem;
+            }
+
+            .movie-card {
+                flex: 0 0 250px;
+                min-width: 250px;
+            }
+
+            .navbar {
+                padding: 0 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .hero-section {
+                height: 400px;
+            }
+
+            .hero-slide {
+                padding: 2rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+
+            .auth-buttons {
+                gap: 0.5rem;
+            }
+
+            .auth-btn {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .movie-card {
+                flex: 0 0 200px;
+                min-width: 200px;
+            }
+
+            .search-container {
+                display: none;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #8892b0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            color: #33E0B2;
+        }
+
+        @media (max-width: 1024px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+        }
+
+        /* Animations */
+        /* Enhanced fadeInUp animation with better easing */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Added smooth entrance animation for movie cards */
+        .movie-card {
+            animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            opacity: 0;
+        }
+
+        .movie-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .movie-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .movie-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .movie-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        /* Removed all infinite slider CSS styles and restored original grid layout */
+
+        /* Adjust grid for smaller screens */
+        @media (max-width: 1200px) {
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .continue-watching {
+                grid-template-columns: 1fr;
+                /* Stack on small mobile */
+                gap: 1rem;
+            }
+
+            .continue-card {
+                padding: 1rem;
+            }
+
+            .continue-details h4 {
+                font-size: 1rem;
+            }
+
+            .continue-details p {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0.5rem;
+            }
+
+            .hero-section {
+                height: 350px;
+                padding: 1rem;
+            }
+
+            .hero-slide {
+                padding: 1.5rem;
+            }
+
+            .hero-text h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-text p {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .hero-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .view-all {
+                font-size: 0.9rem;
+            }
+        }
+
+        .greeting-text {
+            color: #8892b0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 0.3rem;
+            margin-left: 2px;
+            transition: color 0.3s ease;
+        }
+
+        /* New Trailer Popup Styles (Copied from trailers.html) */
+        .trailer-popup-container {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+            align-items: center;
+            justify-content: center;
+            flex-direction: row;
+            /* Default for larger screens */
+        }
+
+        .trailer-player-section {
+            flex: 2;
+            /* Takes more space */
+            max-width: 60%;
+            /* Max width for video */
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-right: 20px;
+            /* Space between video and details */
+        }
+
+        .trailer-player-section iframe {
+            width: 100%;
+            height: 80vh;
+            /* Responsive height */
+            border-radius: 12px;
+            border: 2px solid rgba(51, 224, 178, 0.4);
+            box-shadow: 0 0 20px rgba(51, 224, 178, 0.5);
+        }
+
+        .movie-details-section {
+            flex: 1;
+            /* Takes less space */
+            max-width: 40%;
+            /* Max width for details */
+            background: rgba(26, 26, 46, 0.95);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+            /* Enable scrolling for long descriptions */
+            max-height: 80vh;
+            /* Match video height */
+        }
+
+        .movie-details-section h2 {
+            font-size: 2rem;
+            color: #33E0B2;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(51, 224, 178, 0.3);
+        }
+
+        .movie-details-section p {
+            font-size: 1rem;
+            color: #b0b8c9;
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .movie-details-section p:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .close-popup-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2.5rem;
+            color: #33E0B2;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .close-popup-btn:hover {
+            color: #2BC4A0;
+            transform: rotate(90deg);
+        }
+
+        /* Responsive adjustments for the popup */
+        @media (max-width: 1024px) {
+            .trailer-popup-container {
+                flex-direction: column;
+                /* Stack vertically on smaller screens */
+                padding: 15px;
+            }
+
+            .trailer-player-section {
+                max-width: 100%;
+                padding-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .trailer-player-section iframe {
+                height: 50vh;
+                /* Adjust height for mobile */
+            }
+
+            .movie-details-section {
+                max-width: 100%;
+                max-height: 40vh;
+                /* Adjust height for mobile */
+                padding: 1.5rem;
+            }
+
+            .movie-details-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .movie-details-section p {
+                font-size: 0.9rem;
+            }
+
+            .close-popup-btn {
+                font-size: 2rem;
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .trailer-player-section iframe {
+                height: 40vh;
+            }
+
+            .movie-details-section {
+                max-height: 35vh;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .trailer-player-section iframe {
+                height: 30vh;
+            }
+
+            .movie-details-section {
+                max-height: 30vh;
+                padding: 1rem;
+            }
+
+            .movie-details-section h2 {
+                font-size: 1.2rem;
+            }
+
+            .movie-details-section p {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Added infinite slider styles */
+        .greeting-text {
+            color: #8892b0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 0.3rem;
+            margin-left: 2px;
+            transition: color 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="logo-container">
+            <h1>PrimeVision</h1>
+            <p id="greeting" class="greeting-text"></p>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active">
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9,22 9,12 15,12 15,22" />
+                    </svg>
+                    Home
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="views/explore.html" class="nav-link">
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    Explore
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="views/favourites.html" class="nav-link">
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                    Favourites
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="views/profile.html" class="nav-link">
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                    Profile
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="views/subscription.html" class="nav-link">
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82V9a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                    Subscription
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search movies, shows, actors..." id="searchInput">
+            <button class="search-btn" id="searchBtn">
+                <svg width="20" height="20" viewBox="0 0 24  24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                </svg>
+            </button>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+
+        <div class="auth-buttons">
+            <!--       <a href="views/login.html" class="auth-btn signin-btn">Sign In</a> -->
+            <a href="views/login.html" class="auth-btn signup-btn">Sign Up</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Slider Section -->
+        <section class="hero-section">
+            <div class="hero-slider">
+                <!-- Slide 1 - Stranger Things -->
+                <div class="hero-slide active">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h1>Stranger Things</h1>
+                            <p>When a young boy vanishes, a small town uncovers a mystery involving secret experiments,
+                                terrifying supernatural forces, and one strange little girl. Experience the supernatural
+                                thriller that captivated millions worldwide.</p>
+                            <div class="hero-buttons">
+                                <a href="views/login.html" class="hero-btn primary-btn">Watch Now</a>
+                                <a href="#" class="hero-btn secondary-btn">Add to List</a>
+                            </div>
+                        </div>
+                        <div class="hero-image">
+                            <img src="./images/stranger_things.jpg" alt="Stranger Things" class="hero-character">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 - The Witcher -->
+                <div class="hero-slide">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h1>The Witcher</h1>
+                            <p>Geralt of Rivia, a solitary monster hunter, struggles to find his place in a world where
+                                people often prove more wicked than beasts. Follow the epic fantasy adventure based on
+                                the bestselling novels.</p>
+                            <div class="hero-buttons">
+                                <a href="views/login.html" class="hero-btn primary-btn">Watch Now</a>
+                                <a href="#" class="hero-btn secondary-btn">Add to List</a>
+                            </div>
+                        </div>
+                        <div class="hero-image">
+                            <img src="./images/witcher.webp" alt="The Witcher" class="hero-character">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 - Breaking Bad -->
+                <div class="hero-slide">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h1>Breaking Bad</h1>
+                            <p>A high school chemistry teacher diagnosed with inoperable lung cancer turns to
+                                manufacturing and selling methamphetamine to secure his family's future. The critically
+                                acclaimed crime drama that redefined television.</p>
+                            <div class="hero-buttons">
+                                <a href="views/login.html" class="hero-btn primary-btn">Watch Now</a>
+                                <a href="#" class="hero-btn secondary-btn">Add to List</a>
+                            </div>
+                        </div>
+                        <div class="hero-image">
+                            <img src="./images/breakingbad.avif" alt="Breaking Bad" class="hero-character">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4 - The Mandalorian -->
+                <div class="hero-slide">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h1>The Mandalorian</h1>
+                            <p>After the fall of the Galactic Empire, lawlessness has spread throughout the galaxy. A
+                                lone gunfighter makes his way through the outer reaches, earning his keep as a bounty
+                                hunter in the Star Wars universe.</p>
+                            <div class="hero-buttons">
+                                <a href="views/login.html" class="hero-btn primary-btn">Watch Now</a>
+                                <a href="#" class="hero-btn secondary-btn">Add to List</a>
+                            </div>
+                        </div>
+                        <div class="hero-image">
+                            <img src="./images/mandalorian.jpg" alt="The Mandalorian" class="hero-character">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slider Navigation -->
+            <div class="slider-nav">
+                <div class="slider-dot active" data-slide="0"></div>
+                <div class="slider-dot" data-slide="1"></div>
+                <div class="slider-dot" data-slide="2"></div>
+                <div class="slider-dot" data-slide="3"></div>
+            </div>
+        </section>
+
+        <!-- Continue Watching Section -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Continue Watching</h2>
+                <a href="#" class="view-all">View All</a>
+            </div>
+            <div class="continue-watching">
+                <div class="continue-card">
+                    <div class="continue-info">
+                        <div class="continue-poster">
+                            <img src="./images/chernobyl.jpg" alt="Chernobyl">
+                        </div>
+                        <div class="continue-details">
+                            <h4>Chernobyl</h4>
+                            <p>Episode 3 • Drama</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%"></div>
+                    </div>
+                </div>
+                <div class="continue-card">
+                    <div class="continue-info">
+                        <div class="continue-poster">
+                            <img src="./images/snowpiercer.jpg" alt="Snowpiercer">
+                        </div>
+                        <div class="continue-details">
+                            <h4>Snowpiercer</h4>
+                            <p>Episode 7 • Sci-Fi</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 30%"></div>
+                    </div>
+                </div>
+                <div class="continue-card">
+                    <div class="continue-info">
+                        <div class="continue-poster">
+                            <img src="./images/platform.jpg" alt="The Platform">
+                        </div>
+                        <div class="continue-details">
+                            <h4>The Platform</h4>
+                            <p>Season 1 • Thriller</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- You Might Like Section -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">You might like</h2>
+                <a href="#" class="view-all" id="viewAllYouMightLike">View All</a>
+            </div>
+            <!-- Replacing additional cards in You Might Like section with complete reference cards -->
+            <div class="movies-grid" id="youMightLikeGrid">
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/zAGVQLHvwOY" data-title="Joker"
+                    data-genre="Drama • Crime" data-rating="8.4"
+                    data-description="An aspiring stand-up comedian, Arthur Fleck, is driven insane and becomes a psychopathic killer.">
+
+                    <div class="movie-poster">
+                        <img src="./images/joker.jpg" alt="Joker">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Joker</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Drama • Crime</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.4</span>
+                        </div>
+
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/n9xhJrPXop4" data-title="Dune"
+                    data-genre="Sci-Fi • Adventure" data-rating="8.0"
+                    data-description="Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, must travel to the most dangerous planet in the universe to ensure the future of his family and his people.">
+                    <div class="movie-poster">
+                        <img src="./images/dune.jpg" alt="Dune">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Dune</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Sci-Fi • Adventure</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.0</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/WDkg3h8PCVU" data-title="Aquaman"
+                    data-genre="Action • Fantasy" data-rating="6.8"
+                    data-description="Arthur Curry, the human-born heir to the underwater kingdom of Atlantis, goes on a quest to prevent a war between the worlds of ocean and land.">
+                    <div class="movie-poster">
+                        <img src="./images/aquaman.jpg" alt="Aquaman">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Aquaman</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Action • Fantasy</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>6.8</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/mqqft2x_Aa4" data-title="The Batman"
+                    data-genre="Action • Crime"
+                    data-description="When a sadistic serial killer begins murdering key political figures in Gotham, Batman is forced to investigate the city's hidden corruption and question his family's involvement.">
+                    <div class="movie-poster">
+                        <img src="./images/batman.jpg" alt="The Batman">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">The Batman</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Action • Crime</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>7.8</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <!-- Additional 8 cards for You Might Like -->
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/51F0wfZBV0c"
+                    data-title="Cosmic Echoes" data-genre="Sci-Fi • Thriller" data-rating="7.9"
+                    data-description="A team of astronauts discovers a mysterious signal from deep space, leading them on a perilous journey to the edge of the known universe.">
+                    <div class="movie-poster">
+                        <img src="./images/cosmic.jpg" alt="Cosmic Echoes">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Cosmic Echoes</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Sci-Fi • Thriller</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>7.9</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/WlhQsqA3M-Q" data-title="Dexter"
+                    data-genre="Fantasy • Adventure" data-rating="8.1"
+                    data-description="Dexter is a blood-splatter analyst for the Miami police. But at night, he is a serial killer who only targets other murderers.">
+                    <div class="movie-poster">
+                        <img src="./images/dexter.jpg" alt="Dexter">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Dexter</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Suspense • Action</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>9.9</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/vcLfaOzs-Y8" data-title="Agent X"
+                    data-genre="Action • Spy" data-rating="7.5"
+                    data-description="A rogue agent is forced to go undercover to dismantle a global criminal network threatening world peace.">
+                    <div class="movie-poster">
+                        <img src="./images/Agent x.jpg" alt="Agent X">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Agent X</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Action • Spy</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>7.5</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/X6ySpDVS_Kg" data-title="Mind Games"
+                    data-genre="Thriller • Mystery" data-rating="8.2"
+                    data-description="A brilliant detective delves into the twisted mind of a serial killer who leaves cryptic clues at each crime scene.">
+                    <div class="movie-poster">
+                        <img src="./images/Mind Games.jpg" alt="Mind Games">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Mind Games</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Thriller • Mystery</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.2</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/TcMBFSGVi1c"
+                    data-title="Avengers Endgame" data-genre="Thriller • Action" data-rating="8.0"
+                    data-description="After the devastating events of Avengers: Infinity War (2018), the universe is in ruins. With the help of remaining allies, the Avengers assemble once more.">
+                    <div class="movie-poster">
+                        <img src="./images/Avenger.jpg" alt="avengers_endgame">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1" title="Avengers Endgame">Avengers Endgame</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Thriller • Action</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.0</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/zSWdZVtXT7E"
+                    data-title="Interstellar" data-genre="Space • Mystery" data-rating="7.3"
+                    data-description="Two unlikely individuals find love in the most unexpected places, navigating hilarious mishaps and heartwarming moments.">
+                    <div class="movie-poster">
+                        <img src="./images/interstellar.jpg" alt="Love & Laughter">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Love & Laughter</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Space • Mystery</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>9.1</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/BKndIs7l_60"
+                    data-title="Lost Civilizations" data-genre="Adventure • Action" data-rating="7.7"
+                    data-description="An intrepid archaeologist embarks on a dangerous quest to uncover the secrets of a long-lost civilization.">
+                    <div class="movie-poster">
+                        <img src="./images/Lost civil.jpeg" alt="Lost Civilizations">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Lost Civilization</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Adventure • Action</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>7.7</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/nFOSMqFfDTs"
+                    data-title="The Silent Witness" data-genre="Mystery • Crime" data-rating="8.3"
+                    data-description="A gripping tale of a lone witness who holds the key to solving a complex murder case, but is unable to speak.">
+                    <div class="movie-poster">
+                        <img src="./images/witness.jpg" alt="The Silent Witness">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">The Silent Witness</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Mystery • Crime</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.3</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Now Section -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Popular Now</h2>
+                <a href="#" class="view-all" id="viewAllPopularNow">View All</a>
+            </div>
+            <!-- Replacing additional cards in Popular Now section with complete reference cards -->
+            <div class="movies-grid" id="popularNowGrid">
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/b9EkMc79ZSU"
+                    data-title="Stranger Things" data-genre="Horror • Sci-Fi" data-rating="8.7"
+                    data-description="When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.">
+                    <div class="movie-poster">
+                        <img src="./images/stranger_things.jpg" alt="Stranger Things">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Stranger Things</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Horror • Sci-Fi</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.7</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/JWtnJjn6ng0" data-title="The Crown"
+                    data-genre="Drama • Biography" data-rating="8.6"
+                    data-description="Follows the political rivalries and romance of Queen Elizabeth II's reign and the events that shaped the second half of the 20th century.">
+                    <div class="movie-poster">
+                        <img src="./images/crown.jpg" alt="The Crown">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">The Crown</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Drama • Biography</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.6</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/DotnJ7tTA34"
+                    data-title="House of Dragon" data-genre="Fantasy • Drama" data-rating="8.5"
+                    data-description="The story of the Targaryen civil war that took place about 200 years before the events of Game of Thrones.">
+                    <div class="movie-poster">
+                        <img src="./images/house_of_dragon.jpg" alt="House of Dragon">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">House of Dragon</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Fantasy • Drama</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.5</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/_InqQJRqGW4"
+                    data-title="Money Heist" data-genre="Crime • Thriller" data-rating="8.3"
+                    data-description="A criminal mastermind who goes by 'The Professor' has a plan to pull off the biggest heist in recorded history -- to print billions of euros in the Royal Mint of Spain.">
+                    <div class="movie-poster">
+                        <img src="./images/money_heist.jpg" alt="Money Heist">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Money Heist</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Crime • Thriller</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.3</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <!-- Additional 8 cards for Popular Now -->
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/JQQSHHJWv08"
+                    data-title="Cyberpunk Dreams" data-genre="Sci-Fi • Action" data-rating="8.6"
+                    data-description="In a dystopian future, a street hacker uncovers a conspiracy that could change the fate of humanity.">
+                    <div class="movie-poster">
+                        <img src="./images/cyberpunk.jpg" alt="Cyberpunk Dreams">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1" title="Cyberpunk Dreams">Cyberpunk Dreams</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Sci-Fi • Action</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.6</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/WxPApTGWwas"
+                    data-title="The Last Kingdom" data-genre="Historical • Drama" data-rating="8.4"
+                    data-description="As Alfred the Great defends his kingdom from Norse invaders, Uhtred, born a Saxon but raised by Vikings, seeks to claim his ancestral birthright.">
+                    <div class="movie-poster">
+                        <img src="./images/kingdom.jpg" alt="The Last Kingdom">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">The Last Kingdom</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Historical • Drama</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.4</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/6uiK4yxdR8g"
+                    data-title="Whispers in the Dark" data-genre="Thriller • Supernatural" data-rating="8.1"
+                    data-description="A chilling psychological thriller where a woman's sanity is tested by unseen forces in her isolated home.">
+                    <div class="movie-poster">
+                        <img src="./images/whisper.jpg" alt="Whispers in the Dark">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1" title="Whispers in the Dark">Whispers in the Dark</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Thriller • Supernatural</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.1</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/watch?v=a9_VjbfpYDM"
+                    data-title="The Enchanted Forest" data-genre="Animation • Adventure" data-rating="7.9"
+                    data-description="A magical journey through a vibrant forest filled with mythical creatures and ancient wonders.">
+                    <div class="movie-poster">
+                        <img src="./images/enchant.jpg" alt="The Enchanted Forest">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1" title="The Enchanted Forest">The Enchanted Forest</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Animation • Adventure</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>7.9</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/GzKjO5VQqqM"
+                    data-title="City of Shadows" data-genre="Crime • Drama" data-rating="8.5"
+                    data-description="In a city plagued by corruption, a lone detective fights to bring justice to the innocent.">
+                    <div class="movie-poster">
+                        <img src="./images/city.jpg" alt="City of Shadows">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">City of Shadows</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Crime • Drama</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.5</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/UD0DshFbmxA"
+                    data-title="Starfall Chronicles" data-genre="Sci-Fi • Space Opera" data-rating="8.8"
+                    data-description="An epic saga spanning galaxies, following heroes and villains in a cosmic battle for supremacy.">
+                    <div class="movie-poster">
+                        <img src="./images/star.jpg" alt="Starfall Chronicles">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">Starfall Chronicles</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Sci-Fi • Space Opera</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.8</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/Bm10HivE9u0"
+                    data-title="The Healers" data-genre="Drama • Medical" data-rating="7.6"
+                    data-description="A compelling medical drama exploring the lives and challenges of doctors and patients in a bustling city hospital.">
+                    <div class="movie-poster">
+                        <img src="./images/healer.jpg" alt="The Healers">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1">The Healers</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Drama • Medical</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>7.6</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+                <div class="movie-card" data-trailer="https://www.youtube.com/embed/c69c1P-EURg"
+                    data-title="Wasteland Survivors" data-genre="Action • Post-Apocalyptic" data-rating="8.0"
+                    data-description="In a desolate future, a group of survivors battles against harsh environments and dangerous factions to find a new home.">
+                    <div class="movie-poster">
+                        <img src="./images/Wasteland.jpg" alt="Wasteland Survivors">
+                    </div>
+                    <div class="movie-info">
+                        <!-- Movie Title + Not Interested Button side by side -->
+                        <div class="title-row">
+                            <h3 class="movie-title1" title="Wasteland Survivors">Wasteland Survivors</h3>
+
+                            <!-- Slide Button -->
+                            <button class="hide-btn" aria-label="Skip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-thumbs-down">
+                                    <path
+                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+                                </svg>
+                                <span class="slide-label">Hide</span>
+                            </button>
+                        </div>
+                        <p class="movie-genre">Action • Post-Apocalyptic</p>
+                        <div class="movie-rating">
+                            <span>⭐</span>
+                            <span>8.0</span>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button class="toggle-desc-btn">Show Description
+                            <span class="arrow"></span>
+                        </button>
+
+                        <!-- Hidden Description -->
+                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+                    </div>
+                </div>
+        </section>
+    </main>
+
+    <!-- Added footer section matching homepage design -->
+    <footer
+        style="background: rgba(20, 20, 35, 0.95); border-top: 1px solid rgba(51, 224, 178, 0.1); padding: 3rem 2rem 2rem; margin-top: 4rem;">
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+            <div>
+                <h3 style="color: #33E0B2; font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem;">Company</h3>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">About Us</a>
+                    </li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Careers</a></li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Press</a></li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Blog</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="color: #33E0B2; font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem;">Support</h3>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Help Center</a>
+                    </li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Contact Us</a>
+                    </li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Terms of
+                            Service</a></li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Privacy
+                            Policy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="color: #33E0B2; font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem;">Features</h3>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Premium</a></li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Mobile App</a>
+                    </li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Downloads</a>
+                    </li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Gift Cards</a>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="color: #33E0B2; font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem;">Connect</h3>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Facebook</a>
+                    </li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Twitter</a></li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">Instagram</a>
+                    </li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="color: #8892b0; text-decoration: none; transition: color 0.3s ease;">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div
+            style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 2rem; text-align: center; color: #8892b0;">
+            <p>&copy; 2024 PrimeVision. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- New Trailer Popup (Moved from trailers.html) -->
+    <div class="trailer-popup-container" id="trailerPopup">
+        <span class="close-popup-btn" id="closePopup">&times;</span>
+        <div class="trailer-player-section">
+            <iframe id="trailerPlayer" src="/placeholder.svg" frameborder="0" allow="autoplay; encrypted-media"
+                allowfullscreen></iframe>
+        </div>
+        <div class="movie-details-section">
+            <h2 id="popupMovieTitle"></h2>
+            <p id="popupMovieGenre"></p>
+            <p id="popupMovieRating"></p>
+            <p id="popupMovieDescription"></p>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for search functionality
+        const searchData = [
+            { title: "Chernobyl", genre: "Drama", type: "Series", rating: 9.4, image: "../images/chernobyl.jpg" },
+            { title: "Snowpiercer", genre: "Sci-Fi", type: "Series", rating: 7.0, image: "../images/snowpiercer.jpg" },
+            { title: "The Platform", genre: "Thriller", type: "Movie", rating: 7.0, image: "../images/platform.jpg" },
+            { title: "Joker", genre: "Drama", type: "Movie", rating: 8.4, image: "../images/joker.jpg" },
+            { title: "Dune", genre: "Sci-Fi", type: "Movie", rating: 8.0, image: "../images/dune.jpg" },
+            { title: "Aquaman", genre: "Action", type: "Movie", rating: 6.8, image: "../images/aquaman.jpg" },
+            { title: "The Batman", genre: "Action", type: "Movie", rating: 7.8, image: "../images/batman.jpg" },
+            { title: "Stranger Things", genre: "Horror", type: "Series", rating: 8.7, image: "../images/stranger_things.jpg" },
+            { title: "The Crown", genre: "Drama", type: "Series", rating: 8.6, image: "../images/crown.jpg" },
+            { title: "House of Dragon", genre: "Fantasy", type: "Series", rating: 8.5, image: "../images/house_of_dragon.jpg" },
+            { title: "Money Heist", genre: "Crime", type: "Series", rating: 8.3, image: "../images/money_heist.jpg" },
+            { title: "Breaking Bad", genre: "Crime", type: "Series", rating: 9.5, image: "../images/breakingbad.avif" },
+            { title: "The Witcher", genre: "Fantasy", type: "Series", rating: 8.2, image: "../images/witcher.webp" },
+            { title: "Mandalorian", genre: "Sci-Fi", type: "Series", rating: 8.7, image: "../images/mandalorian.jpg" },
+            { title: "Avengers Endgame", genre: "Action", type: "Movie", rating: 8.4, image: "../images/avengers_endgame.jpg" }
+        ];
+
+        // Hero Slider Functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        const totalSlides = slides.length;
+        let isTransitioning = false;
+
+        function showSlide(index) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            // Add slide-out class to current slide
+            slides[currentSlide].classList.add('slide-out');
+
+            // Remove active class from all elements
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            // After transition delay, show new slide
+            setTimeout(() => {
+                slides.forEach(slide => slide.classList.remove('slide-out'));
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 100);
+            }, 200);
+        }
+
+        function nextSlide() {
+            if (isTransitioning) return;
+            const nextIndex = (currentSlide + 1) % totalSlides;
+            currentSlide = nextIndex;
+            showSlide(currentSlide);
+        }
+
+        // Auto-advance slider with pause on hover
+        let slideInterval = setInterval(nextSlide, 6000);
+
+        // Pause auto-advance on hover
+        const heroSection = document.querySelector('.hero-section');
+        heroSection.addEventListener('mouseenter', () => {
+            clearInterval(slideInterval);
+        });
+
+        heroSection.addEventListener('mouseleave', () => {
+            slideInterval = setInterval(nextSlide, 6000);
+        });
+
+        // Enhanced dot navigation
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                if (isTransitioning || index === currentSlide) return;
+                currentSlide = index;
+                showSlide(currentSlide);
+            });
+        });
+
+        // Search Functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const searchResults = document.getElementById('searchResults');
+
+        function performSearch(query) {
+            if (!query.trim()) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            const filteredResults = searchData.filter(item =>
+                item.title.toLowerCase().includes(query.toLowerCase()) ||
+                item.genre.toLowerCase().includes(query.toLowerCase()) ||
+                item.type.toLowerCase().includes(query.toLowerCase())
+            );
+
+            displaySearchResults(filteredResults);
+        }
+
+        function displaySearchResults(results) {
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="search-result-item"><p>No results found</p></div>';
+            } else {
+                searchResults.innerHTML = results.map(item => `
+              <div class="search-result-item" onclick="selectSearchResult('${item.title}')">
+                  <div class="search-result-image">
+                      <img src="${item.image}" alt="${item.title}">
+                  </div>
+                  <div class="search-result-info">
+                      <h4>${item.title}</h4>
+                      <p>${item.genre} • ${item.type} • ⭐ ${item.rating}</p>
+                  </div>
+              </div>
+          `).join('');
+            }
+            searchResults.style.display = 'block';
+        }
+
+        function selectSearchResult(title) {
+            searchInput.value = title;
+            searchResults.style.display = 'none';
+            alert(`Opening ${title}...`);
+        }
+
+        // Search event listeners
+        searchInput.addEventListener('input', (e) => {
+            performSearch(e.target.value);
+        });
+
+        searchInput.addEventListener('focus', () => {
+            if (searchInput.value.trim()) {
+                performSearch(searchInput.value);
+            }
+        });
+
+        searchBtn.addEventListener('click', () => {
+            performSearch(searchInput.value);
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch(searchInput.value);
+            }
+        });
+
+        // Hide search results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-container')) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            sidebar.style.transform = sidebar.style.transform === 'translateX(0px)' ? 'translateX(-100%)' : 'translateX(0px)';
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 1024 && !sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                sidebar.style.transform = 'translateX(-100%)';
+            }
+        });
+
+        // Movie card interactions - now opens popup in db.html
+        const trailerPopup = document.getElementById("trailerPopup");
+        const trailerPlayer = document.getElementById("trailerPlayer");
+        const closePopup = document.getElementById("closePopup");
+        const popupMovieTitle = document.getElementById("popupMovieTitle");
+        const popupMovieGenre = document.getElementById("popupMovieGenre");
+        const popupMovieRating = document.getElementById("popupMovieRating");
+        const popupMovieDescription = document.getElementById("popupMovieDescription");
+
+        const movieCards = document.querySelectorAll('.movie-card');
+        movieCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const trailerSrc = card.getAttribute("data-trailer");
+                const title = card.getAttribute("data-title");
+                const genre = card.getAttribute("data-genre");
+                const rating = card.getAttribute("data-rating");
+                const description = card.getAttribute("data-description");
+
+                trailerPlayer.src = trailerSrc + "?autoplay=1";
+                popupMovieTitle.textContent = title;
+                popupMovieGenre.textContent = `Genre: ${genre}`;
+                popupMovieRating.textContent = `Rating: ⭐ ${rating}`;
+                popupMovieDescription.textContent = description;
+
+                trailerPopup.style.display = "flex";
+            });
+        });
+
+        // Close popup
+        closePopup.addEventListener("click", () => {
+            trailerPopup.style.display = "none";
+            trailerPlayer.src = ""; // Stop video playback
+        });
+
+        // Close popup when clicking outside of the content
+        window.addEventListener("click", (e) => {
+            if (e.target === trailerPopup) {
+                trailerPopup.style.display = "none";
+                trailerPlayer.src = ""; // Stop video playback
+            }
+        });
+
+        // Continue watching interactions
+        const continueCards = document.querySelectorAll('.continue-card');
+        continueCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const title = card.querySelector('h4').textContent;
+                alert(`Resuming ${title}...`);
+            });
+        });
+
+        // Navbar scroll effect
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                navbar.style.transform = 'translateY(0)';
+            }
+
+            lastScrollTop = scrollTop;
+        });
+
+        // Add loading states for auth buttons
+        const authButtons = document.querySelectorAll('.auth-btn');
+        authButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                btn.style.opacity = '0.7';
+                btn.textContent = 'Loading...';
+
+                setTimeout(() => {
+                    window.location.href = 'views/login.html';
+                }, 500);
+            });
+        });
+
+        function showGreeting() {
+            let now = new Date();
+            let hours = now.getHours();
+            let greeting;
+            if (hours >= 5 && hours < 12) {
+                greeting = "Good Morning!";
+            } else if (hours >= 12 && hours < 17) {
+                greeting = "Good Afternoon!";
+            } else if (hours >= 17 && hours < 19) {
+                greeting = "Good Evening!";
+            } else {
+                greeting = "Good Night!";
+            }
+            document.getElementById("greeting").innerText = greeting;
+        }
+        // Run greeting on page load
+        window.onload = showGreeting;
+
+        /* Updated slider initialization to handle both sliders */
+        /* Updated slider initialization to handle both sliders */
+    </script>
+    <!-- Enhanced Chatbot Styles -->
+    <style>
+        /* Chatbot Toggle Button */
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #33E0B2, #0ef5b5);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(51, 224, 178, 0.3);
+            z-index: 2000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #1a1a2e;
+            backdrop-filter: blur(10px);
+        }
+
+        .chatbot-toggle:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(51, 224, 178, 0.4);
+        }
+
+        .chatbot-toggle:active {
+            transform: translateY(0) scale(0.95);
+        }
+
+        /* Chatbot Window */
+        .chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            height: 600px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 224, 178, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 2000;
+            overflow: hidden;
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chatbot-window.active {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        /* Chatbot Header */
+        .chatbot-header {
+            background: linear-gradient(135deg, #33E0B2, #0ef5b5);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .chatbot-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #1a1a2e;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .chatbot-close:hover {
+            background: rgba(26, 26, 46, 0.2);
+            transform: scale(1.1);
+        }
+
+        /* Chat Messages Area */
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb {
+            background: rgba(51, 224, 178, 0.3);
+            border-radius: 3px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(51, 224, 178, 0.5);
+        }
+
+        /* Message Bubbles */
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.bot {
+            background: linear-gradient(135deg, rgba(51, 224, 178, 0.2), rgba(14, 245, 181, 0.1));
+            border: 1px solid rgba(51, 224, 178, 0.3);
+            color: #ffffff;
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #33E0B2, #0ef5b5);
+            color: #1a1a2e;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+            font-weight: 500;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background: rgba(51, 224, 178, 0.1);
+            border: 1px solid rgba(51, 224, 178, 0.2);
+            border-radius: 18px;
+            border-bottom-left-radius: 6px;
+            padding: 12px 16px;
+            max-width: 80px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #33E0B2;
+            border-radius: 50%;
+            animation: typingDot 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingDot {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Quick Options */
+        .chatbot-options {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(51, 224, 178, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .option-btn {
+            background: rgba(51, 224, 178, 0.1);
+            border: 1px solid rgba(51, 224, 178, 0.3);
+            color: #33E0B2;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .option-btn:hover {
+            background: rgba(51, 224, 178, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Input Area */
+        .chatbot-input-area {
+            padding: 20px;
+            border-top: 1px solid rgba(51, 224, 178, 0.1);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(51, 224, 178, 0.2);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-input:focus {
+            border-color: #33E0B2;
+            box-shadow: 0 0 0 3px rgba(51, 224, 178, 0.1);
+        }
+
+        .chatbot-input::placeholder {
+            color: #8892b0;
+        }
+
+        .chatbot-send {
+            background: linear-gradient(135deg, #33E0B2, #0ef5b5);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #1a1a2e;
+            font-size: 16px;
+        }
+
+        .chatbot-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(51, 224, 178, 0.3);
+        }
+
+        .chatbot-send:active {
+            transform: scale(0.95);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .chatbot-window {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 120px);
+                right: 20px;
+                bottom: 80px;
+            }
+            
+            .chatbot-toggle {
+                right: 20px;
+                bottom: 20px;
+            }
+        }
+    </style>
+
+    <!-- Floating Chatbot Toggle -->
+    <button id="chat-toggle" class="chatbot-toggle">
+        💬
+    </button>
+
+    <!-- Chatbot Window -->
+    <div id="chatbot" class="chatbot-window">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <span>🤖</span>
+                <span>PrimeVision Assistant</span>
+            </div>
+            <button id="chat-close" class="chatbot-close">×</button>
+        </div>
+        
+        <div id="chatbox" class="chatbot-messages"></div>
+        
+        <div id="typing-indicator" class="typing-indicator">
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+        
+        <div id="options" class="chatbot-options"></div>
+        
+        <div class="chatbot-input-area">
+            <input id="userInput" type="text" class="chatbot-input" placeholder="Type your message...">
+            <button onclick="sendMessage()" class="chatbot-send">➤</button>
+        </div>
+    </div>
+
+</body>
+<script>
+  // Enhanced Chatbot Functionality
+  const chatbox = document.getElementById("chatbox");
+  const optionsDiv = document.getElementById("options");
+  const typingIndicator = document.getElementById("typing-indicator");
+  const chatToggle = document.getElementById("chat-toggle");
+  const chatWindow = document.getElementById("chatbot");
+  const chatClose = document.getElementById("chat-close");
+  const userInput = document.getElementById("userInput");
+
+  const responses = {
+    "hi": "👋 Hello! Welcome to PrimeVision. How can I help you today?",
+    "hello": "👋 Hi there! I'm your PrimeVision assistant. What would you like to know?",
+    "plan": "📌 We offer three subscription plans: Basic (₹199), Standard (₹499), and Premium (₹799).",
+    "basic": "✅ Basic Plan: ₹199/month – 1 screen, SD quality, access to our full library.",
+    "standard": "✅ Standard Plan: ₹499/month – 2 screens, HD quality, offline downloads.",
+    "premium": "✅ Premium Plan: ₹799/month – 4 screens, Ultra HD quality, exclusive content.",
+    "watchlist": "📌 You can save movies and shows to your Watchlist for later viewing. Just click the bookmark icon!",
+    "bye": "👋 Goodbye! Enjoy streaming on PrimeVision. Have a great day!",
+    "action": "💥 Popular Action Movies: John Wick, Mad Max: Fury Road, The Dark Knight, Mission Impossible.",
+    "comedy": "😂 Comedy Movies: The Hangover, Jumanji, 3 Idiots, Deadpool, The Office.",
+    "romance": "💕 Romance Movies: The Notebook, La La Land, DDLJ, Titanic, Pride & Prejudice.",
+    "horror": "👻 Horror Movies: The Conjuring, IT, Train to Busan, Hereditary, The Exorcist.",
+    "sci-fi": "🚀 Sci-Fi Movies: Interstellar, Inception, The Matrix, Blade Runner, Dune.",
+    "drama": "🎭 Drama Movies: Shawshank Redemption, Parasite, Joker, The Godfather, Schindler's List.",
+    "show": "📺 Popular Shows: Stranger Things, Money Heist, The Witcher, Breaking Bad, Game of Thrones.",
+    "help": "🤖 I can help you with subscription plans, movie recommendations, show information, and general questions about PrimeVision!",
+    "contact": "📞 For support, email us at support@primevision.com or call +91-800-123-4567",
+    "download": "📱 Download our mobile app from App Store or Google Play for offline viewing!"
+  };
+
+  // Enhanced message function with proper styling
+  function addMessage(sender, text, isUser = false) {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+    messageDiv.textContent = text;
+    
+    chatbox.appendChild(messageDiv);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  // Show typing indicator
+  function showTyping() {
+    typingIndicator.style.display = "flex";
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  // Hide typing indicator
+  function hideTyping() {
+    typingIndicator.style.display = "none";
+  }
+
+  // Enhanced options display
+  function showOptions(options) {
+    optionsDiv.innerHTML = "";
+    options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.textContent = opt.label;
+      btn.onclick = opt.action;
+      optionsDiv.appendChild(btn);
+    });
+  }
+
+  // Start chat with welcome message
+  function startChat() {
+    chatbox.innerHTML = "";
+    addMessage("PrimeVision Assistant", "👋 Hi! I'm your PrimeVision assistant. How can I help you today?");
+    
+    setTimeout(() => {
+      showOptions([
+        { label: "📌 Subscription Plans", action: showPlans },
+        { label: "🎬 Movie Categories", action: showCategories },
+        { label: "📺 Popular Shows", action: showShows },
+        { label: "📱 App Features", action: showFeatures },
+        { label: "❌ Close Chat", action: () => closeChat() }
+      ]);
+    }, 500);
+  }
+
+  // Show subscription plans
+  function showPlans() {
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addMessage("PrimeVision Assistant", "Here are our subscription plans:");
+      addMessage("PrimeVision Assistant", "✅ Basic: ₹199/month – 1 screen, SD quality");
+      addMessage("PrimeVision Assistant", "✅ Standard: ₹499/month – 2 screens, HD quality");
+      addMessage("PrimeVision Assistant", "✅ Premium: ₹799/month – 4 screens, Ultra HD quality");
+      showOptions([{ label: "⬅ Back to Menu", action: startChat }]);
+    }, 1000);
+  }
+
+  // Show movie categories
+  function showCategories() {
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addMessage("PrimeVision Assistant", "Choose a movie category:");
+      showOptions([
+        { label: "💥 Action", action: () => recommend("Action", ["John Wick", "Mad Max: Fury Road", "The Dark Knight", "Mission Impossible"]) },
+        { label: "😂 Comedy", action: () => recommend("Comedy", ["The Hangover", "Jumanji", "3 Idiots", "Deadpool"]) },
+        { label: "💕 Romance", action: () => recommend("Romance", ["The Notebook", "La La Land", "DDLJ", "Titanic"]) },
+        { label: "👻 Horror", action: () => recommend("Horror", ["The Conjuring", "IT", "Train to Busan", "Hereditary"]) },
+        { label: "🚀 Sci-Fi", action: () => recommend("Sci-Fi", ["Interstellar", "Inception", "The Matrix", "Blade Runner"]) },
+        { label: "🎭 Drama", action: () => recommend("Drama", ["Shawshank Redemption", "Parasite", "Joker", "The Godfather"]) },
+        { label: "⬅ Back to Menu", action: startChat }
+      ]);
+    }, 800);
+  }
+
+  // Show recommendations
+  function recommend(category, movies) {
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addMessage("PrimeVision Assistant", `${category} Movies: ${movies.join(", ")}`);
+      showOptions([{ label: "⬅ Back to Categories", action: showCategories }]);
+    }, 1000);
+  }
+
+  // Show popular shows
+  function showShows() {
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addMessage("PrimeVision Assistant", "📺 Popular Shows: Stranger Things, Money Heist, The Witcher, Breaking Bad, Game of Thrones");
+      showOptions([{ label: "⬅ Back to Menu", action: startChat }]);
+    }, 1000);
+  }
+
+  // Show app features
+  function showFeatures() {
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addMessage("PrimeVision Assistant", "📱 App Features:");
+      addMessage("PrimeVision Assistant", "• Offline Downloads");
+      addMessage("PrimeVision Assistant", "• Multiple Device Support");
+      addMessage("PrimeVision Assistant", "• Parental Controls");
+      addMessage("PrimeVision Assistant", "• 4K Ultra HD Streaming");
+      showOptions([{ label: "⬅ Back to Menu", action: startChat }]);
+    }, 1000);
+  }
+
+  // Send message function
+  function sendMessage() {
+    const userText = userInput.value.trim();
+    if (userText === "") return;
+
+    addMessage(userText, true);
+    userInput.value = "";
+
+    // Show typing indicator
+    showTyping();
+
+    // Simulate bot response delay
+    setTimeout(() => {
+      hideTyping();
+      
+      let botResponse = "❌ Sorry, I didn't understand that. Try selecting an option or type 'help' for assistance.";
+      
+      // Check for keyword matches
+      for (let key in responses) {
+        if (userText.toLowerCase().includes(key)) {
+          botResponse = responses[key];
+          break;
+        }
+      }
+
+      addMessage("PrimeVision Assistant", botResponse);
+      
+      // Show options after response
+      setTimeout(() => {
+        showOptions([
+          { label: "📌 Plans", action: showPlans },
+          { label: "🎬 Movies", action: showCategories },
+          { label: "📺 Shows", action: showShows },
+          { label: "❌ Close", action: () => closeChat() }
+        ]);
+      }, 500);
+    }, 1500);
+  }
+
+  // Close chat function
+  function closeChat() {
+    chatWindow.classList.remove("active");
+    setTimeout(() => {
+      chatWindow.style.display = "none";
+    }, 300);
+  }
+
+  // Open chat function
+  function openChat() {
+    chatWindow.style.display = "flex";
+    setTimeout(() => {
+      chatWindow.classList.add("active");
+    }, 10);
+    startChat();
+  }
+
+  // Event listeners
+  chatToggle.onclick = openChat;
+  chatClose.onclick = closeChat;
+
+  // Enter key support
+  userInput.addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  });
+
+  // Click outside to close
+  document.addEventListener("click", function(e) {
+    if (!chatWindow.contains(e.target) && !chatToggle.contains(e.target)) {
+      if (chatWindow.classList.contains("active")) {
+        closeChat();
+      }
+    }
+  });
+</script>
+<script>
+  (function(){
+    function timeOfDay(){
+      const h = new Date().getHours();
+      if (h < 12) return 'Good morning';
+      if (h < 17) return 'Good afternoon';
+      return 'Good evening';
+    }
+    function firstNameOf(fullName){
+      if(!fullName) return '';
+      return fullName.trim().split(/\s+/)[0];
+    }
+    function setGreeting(){
+      try {
+        const name = localStorage.getItem('user_full_name') || '';
+        const greeting = name ? `${timeOfDay()}, ${firstNameOf(name)}` : `${timeOfDay()}!`;
+        const logoP = document.querySelector('.logo-container p');
+        if (logoP) logoP.textContent = greeting;
+        const anyGreetingEl = document.getElementById('greetingText');
+        if (anyGreetingEl) anyGreetingEl.textContent = greeting;
+      } catch(e) {}
+    }
+    let greetingTimer;
+    function refreshFromApi(){
+      const token = localStorage.getItem('auth_token');
+      if(!token) { setGreeting(); return; }
+      fetch('http://localhost:5000/users/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).then(r => r.json()).then(data => {
+        if(data && data.user){
+          localStorage.setItem('user_full_name', data.user.fullName || '');
+          localStorage.setItem('user_email', data.user.email || '');
+          setGreeting();
+        } else {
+          setGreeting();
+        }
+      }).catch(() => setGreeting());
+      if (greetingTimer) clearTimeout(greetingTimer);
+      greetingTimer = setTimeout(setGreeting, 60 * 1000); // keep stable and refresh each minute
+    }
+    function renderAuthButtons(){
+      const navRight = document.querySelector('.auth-buttons, .user-actions');
+      if (!navRight) return;
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        navRight.innerHTML = '<button class="auth-btn signup-btn" id="navSignOut">Sign Out</button>';
+        document.getElementById('navSignOut').addEventListener('click', function(){
+          try { localStorage.removeItem('auth_token'); } catch(e) {}
+          window.location.href = 'views/login.html';
+        });
+      } else {
+        navRight.innerHTML = '<button class="auth-btn signin-btn" id="navSignIn">Sign In</button>';
+        document.getElementById('navSignIn').addEventListener('click', function(){
+          window.location.href = 'views/login.html';
+        });
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      renderAuthButtons();
+      refreshFromApi();
+    });
+  })();
+</script>
+<script>
+  (function(){
+    function createButton(label){
+      const btn = document.createElement('button');
+      btn.className = 'add-fav-pill';
+      btn.setAttribute('aria-label', 'Add to favourites');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+      return btn;
+    }
+    function extractCardData(card){
+      const titleEl = card.querySelector('.movie-title1, .fav-title, h3, h4, .title');
+      const title = titleEl ? titleEl.textContent.trim() : '';
+      let posterUrl = '';
+      const img = card.querySelector('img');
+      if (img && img.src) posterUrl = img.src;
+      if (!posterUrl){
+        const bg = card.querySelector('[style*="background-image"]');
+        if (bg){
+          const m = bg.getAttribute('style').match(/url\(['\"]?(.*?)['\"]?\)/);
+          if (m && m[1]) posterUrl = m[1];
+        }
+      }
+      const type = 'movie';
+      const itemId = (title || posterUrl || Math.random().toString(36).slice(2)).toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,60);
+      return { itemId, title, type, posterUrl };
+    }
+    async function addToFav(data){
+      const token = localStorage.getItem('auth_token');
+      if (!token){ window.location.href = 'views/login.html'; return; }
+      try{
+        const res = await fetch('http://localhost:5000/users/me/favourites',{
+          method:'POST',
+          headers:{ 'Content-Type':'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify(data)
+        });
+        const out = await res.json();
+        if (!res.ok) throw new Error(out.message || 'Failed');
+        showToast('Added to favourites');
+      }catch(e){
+        alert(e.message || 'Failed to add to favourites');
+      }
+    }
+    function showToast(msg){
+      let el = document.getElementById('globalToast');
+      if(!el){
+        el = document.createElement('div');
+        el.id = 'globalToast';
+        el.className = 'toast';
+        document.body.appendChild(el);
+      }
+      el.textContent = msg;
+      requestAnimationFrame(()=>{ el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
+      setTimeout(()=>{ el.style.opacity = '0'; el.style.transform = 'translateY(-10px)'; }, 1600);
+    }
+    function wireCards(){
+      const candidates = document.querySelectorAll('.movie-card, .content-card');
+      candidates.forEach(card => {
+        if (card.__favWired) return; card.__favWired = true;
+        const btn = createButton('Add to Favourites');
+        btn.addEventListener('click', (e)=>{
+          e.stopPropagation();
+          e.preventDefault();
+          const data = extractCardData(card);
+          if (!data.title){ alert('Unable to detect item title'); return; }
+          addToFav(data).then(()=> btn.classList.add('added'));
+        });
+        const info = card.querySelector('.movie-description, .content-info, .fav-info, .title-row') || card;
+        info.appendChild(btn);
+      });
+      // Also add to hero section primary slide
+      document.querySelectorAll('.hero-buttons').forEach(container => {
+        if (container.querySelector('.add-fav-btn')) return;
+        const btn = createButton('Add to Favourites');
+        btn.classList.add('add-fav-btn');
+        btn.addEventListener('click', (e)=>{
+          e.preventDefault();
+          const slide = container.closest('.hero-slide') || document;
+          const titleEl = slide.querySelector('.hero-text h1');
+          const title = titleEl ? titleEl.textContent.trim() : 'Featured';
+          let posterUrl = '';
+          const bg = slide.querySelector('[style*="background-image"]');
+          if (bg){
+            const m = bg.getAttribute('style').match(/url\(['\"]?(.*?)['\"]?\)/);
+            if (m && m[1]) posterUrl = m[1];
+          }
+          addToFav({ itemId: title.toLowerCase().replace(/[^a-z0-9]+/g,'-'), title, type:'movie', posterUrl }).then(()=> btn.classList.add('added'));
+        });
+        container.appendChild(btn);
+      });
+    }
+    document.addEventListener('DOMContentLoaded', wireCards);
+  })();
+</script>
+
+</script>
+<style>
+  /* Clean up: remove old hide/dislike controls visually */
+  .hide-btn, .toggle-desc-btn, .dislike-btn, .dislike-icon, .arrow { display:none !important; }
+  /* Compact title row without hide control space */
+  .title-row { justify-content: flex-start; }
+</style>
+
+</html>
