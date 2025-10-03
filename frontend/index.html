@@ -1366,49 +1366,8 @@
                 <h2 class="section-title">Continue Watching</h2>
                 <a href="#" class="view-all">View All</a>
             </div>
-            <div class="continue-watching">
-                <div class="continue-card">
-                    <div class="continue-info">
-                        <div class="continue-poster">
-                            <img src="./images/chernobyl.jpg" alt="Chernobyl">
-                        </div>
-                        <div class="continue-details">
-                            <h4>Chernobyl</h4>
-                            <p>Episode 3 • Drama</p>
-                        </div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 65%"></div>
-                    </div>
-                </div>
-                <div class="continue-card">
-                    <div class="continue-info">
-                        <div class="continue-poster">
-                            <img src="./images/snowpiercer.jpg" alt="Snowpiercer">
-                        </div>
-                        <div class="continue-details">
-                            <h4>Snowpiercer</h4>
-                            <p>Episode 7 • Sci-Fi</p>
-                        </div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 30%"></div>
-                    </div>
-                </div>
-                <div class="continue-card">
-                    <div class="continue-info">
-                        <div class="continue-poster">
-                            <img src="./images/platform.jpg" alt="The Platform">
-                        </div>
-                        <div class="continue-details">
-                            <h4>The Platform</h4>
-                            <p>Season 1 • Thriller</p>
-                        </div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 85%"></div>
-                    </div>
-                </div>
+            <div class="continue-watching" id="continueWatchingContainer">
+                <!-- Dynamic content will be loaded here -->
             </div>
         </section>
 
@@ -1419,887 +1378,27 @@
                 <a href="#" class="view-all" id="viewAllYouMightLike">View All</a>
             </div>
             <!-- Replacing additional cards in You Might Like section with complete reference cards -->
-            <div class="movies-grid" id="youMightLikeGrid">
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/zAGVQLHvwOY" data-title="Joker"
-                    data-genre="Drama • Crime" data-rating="8.4"
-                    data-description="An aspiring stand-up comedian, Arthur Fleck, is driven insane and becomes a psychopathic killer.">
-
-                    <div class="movie-poster">
-                        <img src="./images/joker.jpg" alt="Joker">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Joker</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Drama • Crime</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.4</span>
-                        </div>
-
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/n9xhJrPXop4" data-title="Dune"
-                    data-genre="Sci-Fi • Adventure" data-rating="8.0"
-                    data-description="Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, must travel to the most dangerous planet in the universe to ensure the future of his family and his people.">
-                    <div class="movie-poster">
-                        <img src="./images/dune.jpg" alt="Dune">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Dune</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Sci-Fi • Adventure</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.0</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/WDkg3h8PCVU" data-title="Aquaman"
-                    data-genre="Action • Fantasy" data-rating="6.8"
-                    data-description="Arthur Curry, the human-born heir to the underwater kingdom of Atlantis, goes on a quest to prevent a war between the worlds of ocean and land.">
-                    <div class="movie-poster">
-                        <img src="./images/aquaman.jpg" alt="Aquaman">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Aquaman</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Action • Fantasy</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>6.8</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/mqqft2x_Aa4" data-title="The Batman"
-                    data-genre="Action • Crime"
-                    data-description="When a sadistic serial killer begins murdering key political figures in Gotham, Batman is forced to investigate the city's hidden corruption and question his family's involvement.">
-                    <div class="movie-poster">
-                        <img src="./images/batman.jpg" alt="The Batman">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">The Batman</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Action • Crime</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>7.8</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <!-- Additional 8 cards for You Might Like -->
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/51F0wfZBV0c"
-                    data-title="Cosmic Echoes" data-genre="Sci-Fi • Thriller" data-rating="7.9"
-                    data-description="A team of astronauts discovers a mysterious signal from deep space, leading them on a perilous journey to the edge of the known universe.">
-                    <div class="movie-poster">
-                        <img src="./images/cosmic.jpg" alt="Cosmic Echoes">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Cosmic Echoes</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Sci-Fi • Thriller</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>7.9</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/WlhQsqA3M-Q" data-title="Dexter"
-                    data-genre="Fantasy • Adventure" data-rating="8.1"
-                    data-description="Dexter is a blood-splatter analyst for the Miami police. But at night, he is a serial killer who only targets other murderers.">
-                    <div class="movie-poster">
-                        <img src="./images/dexter.jpg" alt="Dexter">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Dexter</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Suspense • Action</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>9.9</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/vcLfaOzs-Y8" data-title="Agent X"
-                    data-genre="Action • Spy" data-rating="7.5"
-                    data-description="A rogue agent is forced to go undercover to dismantle a global criminal network threatening world peace.">
-                    <div class="movie-poster">
-                        <img src="./images/Agent x.jpg" alt="Agent X">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Agent X</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Action • Spy</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>7.5</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/X6ySpDVS_Kg" data-title="Mind Games"
-                    data-genre="Thriller • Mystery" data-rating="8.2"
-                    data-description="A brilliant detective delves into the twisted mind of a serial killer who leaves cryptic clues at each crime scene.">
-                    <div class="movie-poster">
-                        <img src="./images/Mind Games.jpg" alt="Mind Games">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Mind Games</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Thriller • Mystery</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.2</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/TcMBFSGVi1c"
-                    data-title="Avengers Endgame" data-genre="Thriller • Action" data-rating="8.0"
-                    data-description="After the devastating events of Avengers: Infinity War (2018), the universe is in ruins. With the help of remaining allies, the Avengers assemble once more.">
-                    <div class="movie-poster">
-                        <img src="./images/Avenger.jpg" alt="avengers_endgame">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1" title="Avengers Endgame">Avengers Endgame</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Thriller • Action</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.0</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/zSWdZVtXT7E"
-                    data-title="Interstellar" data-genre="Space • Mystery" data-rating="7.3"
-                    data-description="Two unlikely individuals find love in the most unexpected places, navigating hilarious mishaps and heartwarming moments.">
-                    <div class="movie-poster">
-                        <img src="./images/interstellar.jpg" alt="Love & Laughter">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Love & Laughter</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Space • Mystery</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>9.1</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/BKndIs7l_60"
-                    data-title="Lost Civilizations" data-genre="Adventure • Action" data-rating="7.7"
-                    data-description="An intrepid archaeologist embarks on a dangerous quest to uncover the secrets of a long-lost civilization.">
-                    <div class="movie-poster">
-                        <img src="./images/Lost civil.jpeg" alt="Lost Civilizations">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Lost Civilization</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Adventure • Action</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>7.7</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/nFOSMqFfDTs"
-                    data-title="The Silent Witness" data-genre="Mystery • Crime" data-rating="8.3"
-                    data-description="A gripping tale of a lone witness who holds the key to solving a complex murder case, but is unable to speak.">
-                    <div class="movie-poster">
-                        <img src="./images/witness.jpg" alt="The Silent Witness">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">The Silent Witness</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Mystery • Crime</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.3</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-            </div>
+            <div class="movies-grid" id="youMightLikeGrid"></div>
         </section>
+        
 
         <!-- Popular Now Section -->
         <section class="content-section">
             <div class="section-header">
                 <h2 class="section-title">Popular Now</h2>
-                <a href="#" class="view-all" id="viewAllPopularNow">View All</a>
+                <a href="#" class="view-all">View All</a>
             </div>
-            <!-- Replacing additional cards in Popular Now section with complete reference cards -->
-            <div class="movies-grid" id="popularNowGrid">
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/b9EkMc79ZSU"
-                    data-title="Stranger Things" data-genre="Horror • Sci-Fi" data-rating="8.7"
-                    data-description="When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.">
-                    <div class="movie-poster">
-                        <img src="./images/stranger_things.jpg" alt="Stranger Things">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Stranger Things</h3>
+            <div class="movies-grid" id="popularNowGrid"></div>
+        </section>
 
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Horror • Sci-Fi</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.7</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/JWtnJjn6ng0" data-title="The Crown"
-                    data-genre="Drama • Biography" data-rating="8.6"
-                    data-description="Follows the political rivalries and romance of Queen Elizabeth II's reign and the events that shaped the second half of the 20th century.">
-                    <div class="movie-poster">
-                        <img src="./images/crown.jpg" alt="The Crown">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">The Crown</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Drama • Biography</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.6</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/DotnJ7tTA34"
-                    data-title="House of Dragon" data-genre="Fantasy • Drama" data-rating="8.5"
-                    data-description="The story of the Targaryen civil war that took place about 200 years before the events of Game of Thrones.">
-                    <div class="movie-poster">
-                        <img src="./images/house_of_dragon.jpg" alt="House of Dragon">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">House of Dragon</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Fantasy • Drama</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.5</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/_InqQJRqGW4"
-                    data-title="Money Heist" data-genre="Crime • Thriller" data-rating="8.3"
-                    data-description="A criminal mastermind who goes by 'The Professor' has a plan to pull off the biggest heist in recorded history -- to print billions of euros in the Royal Mint of Spain.">
-                    <div class="movie-poster">
-                        <img src="./images/money_heist.jpg" alt="Money Heist">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Money Heist</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Crime • Thriller</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.3</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <!-- Additional 8 cards for Popular Now -->
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/JQQSHHJWv08"
-                    data-title="Cyberpunk Dreams" data-genre="Sci-Fi • Action" data-rating="8.6"
-                    data-description="In a dystopian future, a street hacker uncovers a conspiracy that could change the fate of humanity.">
-                    <div class="movie-poster">
-                        <img src="./images/cyberpunk.jpg" alt="Cyberpunk Dreams">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1" title="Cyberpunk Dreams">Cyberpunk Dreams</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Sci-Fi • Action</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.6</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/WxPApTGWwas"
-                    data-title="The Last Kingdom" data-genre="Historical • Drama" data-rating="8.4"
-                    data-description="As Alfred the Great defends his kingdom from Norse invaders, Uhtred, born a Saxon but raised by Vikings, seeks to claim his ancestral birthright.">
-                    <div class="movie-poster">
-                        <img src="./images/kingdom.jpg" alt="The Last Kingdom">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">The Last Kingdom</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Historical • Drama</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.4</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/6uiK4yxdR8g"
-                    data-title="Whispers in the Dark" data-genre="Thriller • Supernatural" data-rating="8.1"
-                    data-description="A chilling psychological thriller where a woman's sanity is tested by unseen forces in her isolated home.">
-                    <div class="movie-poster">
-                        <img src="./images/whisper.jpg" alt="Whispers in the Dark">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1" title="Whispers in the Dark">Whispers in the Dark</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Thriller • Supernatural</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.1</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/watch?v=a9_VjbfpYDM"
-                    data-title="The Enchanted Forest" data-genre="Animation • Adventure" data-rating="7.9"
-                    data-description="A magical journey through a vibrant forest filled with mythical creatures and ancient wonders.">
-                    <div class="movie-poster">
-                        <img src="./images/enchant.jpg" alt="The Enchanted Forest">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1" title="The Enchanted Forest">The Enchanted Forest</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Animation • Adventure</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>7.9</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/GzKjO5VQqqM"
-                    data-title="City of Shadows" data-genre="Crime • Drama" data-rating="8.5"
-                    data-description="In a city plagued by corruption, a lone detective fights to bring justice to the innocent.">
-                    <div class="movie-poster">
-                        <img src="./images/city.jpg" alt="City of Shadows">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">City of Shadows</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Crime • Drama</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.5</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/UD0DshFbmxA"
-                    data-title="Starfall Chronicles" data-genre="Sci-Fi • Space Opera" data-rating="8.8"
-                    data-description="An epic saga spanning galaxies, following heroes and villains in a cosmic battle for supremacy.">
-                    <div class="movie-poster">
-                        <img src="./images/star.jpg" alt="Starfall Chronicles">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">Starfall Chronicles</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Sci-Fi • Space Opera</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.8</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/Bm10HivE9u0"
-                    data-title="The Healers" data-genre="Drama • Medical" data-rating="7.6"
-                    data-description="A compelling medical drama exploring the lives and challenges of doctors and patients in a bustling city hospital.">
-                    <div class="movie-poster">
-                        <img src="./images/healer.jpg" alt="The Healers">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1">The Healers</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Drama • Medical</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>7.6</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
-                <div class="movie-card" data-trailer="https://www.youtube.com/embed/c69c1P-EURg"
-                    data-title="Wasteland Survivors" data-genre="Action • Post-Apocalyptic" data-rating="8.0"
-                    data-description="In a desolate future, a group of survivors battles against harsh environments and dangerous factions to find a new home.">
-                    <div class="movie-poster">
-                        <img src="./images/Wasteland.jpg" alt="Wasteland Survivors">
-                    </div>
-                    <div class="movie-info">
-                        <!-- Movie Title + Not Interested Button side by side -->
-                        <div class="title-row">
-                            <h3 class="movie-title1" title="Wasteland Survivors">Wasteland Survivors</h3>
-
-                            <!-- Slide Button -->
-                            <button class="hide-btn" aria-label="Skip">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-thumbs-down">
-                                    <path
-                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
-                                </svg>
-                                <span class="slide-label">Hide</span>
-                            </button>
-                        </div>
-                        <p class="movie-genre">Action • Post-Apocalyptic</p>
-                        <div class="movie-rating">
-                            <span>⭐</span>
-                            <span>8.0</span>
-                        </div>
-                        <!-- Toggle Button -->
-                        <button class="toggle-desc-btn">Show Description
-                            <span class="arrow"></span>
-                        </button>
-
-                        <!-- Hidden Description -->
-                        <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
-                    </div>
-                </div>
+        <!-- Recommendations Section -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Recommended For You</h2>
+            </div>
+            <div id="recommendations-container" class="recommendations-section">
+                <p class="recommendation-prompt">Click on any movie to get personalized recommendations</p>
+            </div>
         </section>
     </main>
 
@@ -2381,7 +1480,7 @@
     <div class="trailer-popup-container" id="trailerPopup">
         <span class="close-popup-btn" id="closePopup">&times;</span>
         <div class="trailer-player-section">
-            <iframe id="trailerPlayer" src="/placeholder.svg" frameborder="0" allow="autoplay; encrypted-media"
+            <iframe id="trailerPlayer" src="about:blank" frameborder="0" allow="autoplay; encrypted-media"
                 allowfullscreen></iframe>
         </div>
         <div class="movie-details-section">
@@ -2600,8 +1699,87 @@
                 trailerPlayer.src = ""; // Stop video playback
             }
         });
+  
 
-        // Continue watching interactions
+  // Function to populate Continue Watching section
+  async function populateContinueWatching() {
+    const continueWatchingContainer = document.getElementById('continueWatchingContainer');
+    if (!continueWatchingContainer) {
+      console.error('Continue watching container not found!');
+      return;
+    }
+
+    const currentUserId = localStorage.getItem('user_id');
+    if (!currentUserId) {
+      continueWatchingContainer.innerHTML = '<p>Sign in to see your watch history</p>';
+      return;
+    }
+
+    try {
+      // Use the new continue-watching API endpoint
+      const response = await fetch(`http://localhost:5000/continue-watching/${currentUserId}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch watch history');
+      }
+
+      const data = await response.json();
+      const watchHistory = data.watchHistory || [];
+      
+      if (!watchHistory || watchHistory.length === 0) {
+        continueWatchingContainer.innerHTML = '<p>No watch history found. Start watching!</p>';
+        return;
+      }
+
+      // Create HTML for each watch history item
+      const watchHistoryHTML = watchHistory.map(item => {
+        if (!item) return '';
+        
+        return `
+          <div class="continue-card" data-id="${item.itemId}">
+            <div class="continue-info">
+              <div class="continue-poster">
+                <img src="${item.posterUrl}" alt="${escapeHtml(item.title)}">
+              </div>
+              <div class="continue-details">
+                <h4>${escapeHtml(item.title)}</h4>
+                <p>${item.type || ''}</p>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${item.progress || 50}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      continueWatchingContainer.innerHTML = watchHistoryHTML;
+      
+      // Add click event listeners to continue cards
+      document.querySelectorAll('.continue-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const movieId = card.getAttribute('data-id');
+          // You could add logic here to resume playback
+          openMovieDetails(movieId);
+        });
+      });
+      
+    } catch (error) {
+      console.error('Error fetching watch history:', error);
+      continueWatchingContainer.innerHTML = '<p>Error loading watch history</p>';
+    }
+  }
+
+  // Call populateContinueWatching on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    populateContinueWatching();
+  });
+
+  // Continue watching interactions
         const continueCards = document.querySelectorAll('.continue-card');
         continueCards.forEach(card => {
             card.addEventListener('click', () => {
@@ -3215,6 +2393,371 @@
   });
 </script>
 <script>
+  async function loadAllMovies(){
+    try {
+      // Fetch and populate "You Might Like" section
+      console.log('Fetching movies from API endpoint: you-might-like');
+      const youGrid = document.getElementById('youMightLikeGrid');
+      if (youGrid) {
+        youGrid.innerHTML = '';
+        try {
+          const youRes = await fetch('http://localhost:5000/api/shows/you-might-like');
+          const youData = await youRes.json();
+          const youMovies = Array.isArray(youData) ? youData : (youData.shows || []);
+          const youCardsHtml = youMovies.map(m => generateMovieCardHTML(m)).join('');
+          youGrid.innerHTML = youCardsHtml;
+        } catch (err) {
+          console.error('Failed to load shows for #youMightLikeGrid:', err);
+          youGrid.innerHTML = '<div class="error-message">Unable to load recommendations</div>';
+        }
+      }
+      
+      // Fetch and populate "Popular Now" section
+      console.log('Fetching movies from API endpoint: popular');
+      const popularGrid = document.getElementById('popularNowGrid');
+      if (popularGrid) {
+        popularGrid.innerHTML = '';
+        try {
+          const popularRes = await fetch('http://localhost:5000/api/shows/popular');
+          const popularData = await popularRes.json();
+          const popularMovies = Array.isArray(popularData) ? popularData : (popularData.shows || []);
+          const popularCardsHtml = popularMovies.map(m => generateMovieCardHTML(m)).join('');
+          popularGrid.innerHTML = popularCardsHtml;
+        } catch (err) {
+          console.error('Failed to load shows for #popularNowGrid:', err);
+          popularGrid.innerHTML = '<div class="error-message">Unable to load popular shows</div>';
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load shows:', err);
+    }
+  }
+
+  function generateMovieCardHTML(movie){
+    const title = movie.title || '';
+    const poster = movie.poster_url || '';
+    const rating = (movie.rating != null) ? movie.rating : '';
+    const genres = Array.isArray(movie.genres) ? movie.genres.join(' • ') : (movie.genre || '');
+    const description = movie.description || '';
+    const trailer = movie.trailer_url || '';
+    const id = movie._id || '';
+    return `
+      <div class="movie-card" data-id="${id}" data-trailer="${trailer}" data-title="${escapeHtml(title)}" data-genre="${escapeHtml(genres)}" data-rating="${rating}" data-description="${escapeHtml(description)}">
+        <div class="movie-poster">
+          <img src="${poster}" alt="${escapeHtml(title)}">
+        </div>
+        <div class="movie-info">
+          <div class="title-row">
+            <h3 class="movie-title1">${escapeHtml(title)}</h3>
+          </div>
+          <p class="movie-genre">${escapeHtml(genres)}</p>
+          <div class="movie-rating"><span>⭐</span><span>${rating}</span></div>
+          <button class="toggle-desc-btn">Show Description<span class="arrow"></span></button>
+          <p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>
+        </div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
+  }
+
+  document.addEventListener('DOMContentLoaded', loadAllMovies);
+</script>
+<script>
+  function createMovieCard(movie){
+    const id = movie._id || '';
+    const title = movie.title || '';
+    const poster = movie.poster_url || '';
+    const rating = (movie.rating != null) ? movie.rating : '';
+    const genres = Array.isArray(movie.genres) ? movie.genres.join(' • ') : '';
+    const description = movie.description || '';
+    const trailer = movie.trailer_url || '';
+    return (
+      '<div class="movie-card" data-id="'+id+'" data-trailer="'+trailer+'" data-title="'+escapeHtml(title)+'" data-genre="'+escapeHtml(genres)+'" data-rating="'+rating+'" data-description="'+escapeHtml(description)+'">'
+      +  '<div class="movie-poster">'
+      +    '<img src="'+poster+'" alt="'+escapeHtml(title)+'">'
+      +  '</div>'
+      +  '<div class="movie-info">'
+      +    '<div class="title-row">'
+      +      '<h3 class="movie-title1">'+escapeHtml(title)+'</h3>'
+      +    '</div>'
+      +    '<p class="movie-genre">'+escapeHtml(genres)+'</p>'
+      +    '<div class="movie-rating"><span>⭐</span><span>'+rating+'</span></div>'
+      +    '<button class="toggle-desc-btn">Show Description<span class="arrow"></span></button>'
+      +    '<p class="movie-description" style="display: none; margin-top: 10px; color: #b0b8c9;"></p>'
+      +  '</div>'
+      +'</div>'
+    );
+  }
+
+  async function populateSection(endpoint, containerSelector) {
+    try {
+      console.log(`Fetching movies from API endpoint: ${endpoint}`);
+      // Using the correct API endpoint format
+      const res = await fetch(`http://localhost:5000/api/shows/${endpoint}`);
+      console.log('API response status:', res.status);
+      const data = await res.json();
+      console.log('API data received:', data);
+      const movies = Array.isArray(data) ? data : (data.shows || []);
+      console.log('Movies array:', movies);
+      const container = document.querySelector(containerSelector);
+      console.log(`Container ${containerSelector} found:`, container);
+      if (!container) {
+        console.error(`Container ${containerSelector} not found!`);
+        return;
+      }
+      container.innerHTML = movies.map(createMovieCard).join('');
+      console.log(`Movies loaded successfully for ${containerSelector}`);
+    } catch(err) {
+      console.error(`Failed to load shows for ${containerSelector}:`, err);
+    }
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(s){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]);});
+  }
+
+  async function fetchAndDisplayRecommendations(movieId) {
+    const recommendationsContainer = document.querySelector('#recommendations-container');
+    if (!recommendationsContainer) {
+      console.error('Recommendations container not found!');
+      return;
+    }
+    
+    // Show loading message
+    recommendationsContainer.innerHTML = '<p>Finding recommendations for you...</p>';
+    
+    try {
+      const response = await fetch(`http://localhost:5000/api/shows/recommendations/${movieId}`);
+      
+      if (!response.ok) {
+        throw new Error(`API returned status ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (!data || !Array.isArray(data) || data.length === 0) {
+        recommendationsContainer.innerHTML = '<p class="no-recommendations">No recommendations found for this movie.</p>';
+        return;
+      }
+      
+      // Save recommendations to the database if user is logged in
+      const currentUserId = localStorage.getItem('user_id');
+      if (currentUserId) {
+        try {
+          // Save each recommendation to the database
+          for (const movie of data) {
+            await fetch(`http://localhost:5000/recommendations/${currentUserId}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+              },
+              body: JSON.stringify({
+                itemId: movie._id,
+                title: movie.title,
+                type: 'movie',
+                posterUrl: movie.poster_url,
+                rating: movie.rating,
+                genres: movie.genres
+              })
+            });
+          }
+          console.log('Recommendations saved to database');
+        } catch (saveError) {
+          console.error('Error saving recommendations to database:', saveError);
+          // Continue even if saving fails - we'll still display the recommendations
+        }
+      }
+      
+      // Generate movie cards for recommendations
+      const recommendationCards = data.map(createMovieCard).join('');
+      recommendationsContainer.innerHTML = `
+        <div class="recommendations-grid movies-grid">
+          ${recommendationCards}
+        </div>
+      `;
+    } catch (error) {
+      console.error('Error fetching recommendations:', error);
+      recommendationsContainer.innerHTML = '<p class="error-message">Failed to load recommendations. Please try again later.</p>';
+    }
+  }
+
+  // New comprehensive function to handle movie card clicks
+  async function handleMovieCardClick(movieId) {
+    if (!movieId) return;
+    
+    const currentUserId = localStorage.getItem('user_id');
+    const authToken = localStorage.getItem('auth_token');
+    
+    // Step A: Fetch and display new recommendations
+    console.log('Step A: Fetching recommendations for movie ID:', movieId);
+    try {
+      const response = await fetch(`http://localhost:5000/api/shows/recommendations/${movieId}`);
+      
+      if (!response.ok) {
+        throw new Error(`API returned status ${response.status}`);
+      }
+      
+      const recommendations = await response.json();
+      
+      // Display recommendations
+      const recommendationsContainer = document.querySelector('#recommendations-container');
+      if (recommendationsContainer) {
+        if (!recommendations || !Array.isArray(recommendations) || recommendations.length === 0) {
+          recommendationsContainer.innerHTML = '<p class="no-recommendations">No recommendations found for this movie.</p>';
+        } else {
+          // Generate movie cards for recommendations
+          const recommendationCards = recommendations.map(createMovieCard).join('');
+          recommendationsContainer.innerHTML = `
+            <div class="recommendations-grid movies-grid">
+              ${recommendationCards}
+            </div>
+          `;
+        }
+        
+        // Scroll recommendations into view
+        document.querySelector('.recommendations-section').scrollIntoView({ behavior: 'smooth' });
+      }
+      
+      // Step B: Save recommendations to user's profile
+      if (currentUserId && authToken && recommendations && recommendations.length > 0) {
+        console.log('Step B: Saving recommendations to user profile');
+        
+        const saveResponse = await fetch('http://localhost:5000/recommendations', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({
+            userId: currentUserId,
+            sourceShowId: movieId,
+            recommendations: recommendations.map(rec => rec._id)
+          })
+        });
+        
+        if (!saveResponse.ok) {
+          throw new Error('Failed to save recommendations');
+        }
+        
+        console.log('Recommendations saved successfully');
+      }
+      
+      // Step C: Log the clicked movie to watch history
+      if (currentUserId && authToken) {
+        console.log('Step C: Logging movie to watch history');
+        
+        const watchHistoryResponse = await fetch('http://localhost:5000/continue-watching', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({
+            userId: currentUserId,
+            showId: movieId
+          })
+        });
+        
+        if (!watchHistoryResponse.ok) {
+          throw new Error('Failed to update watch history');
+        }
+        
+        console.log('Watch history updated successfully');
+        
+        // Refresh continue watching section
+        populateContinueWatching();
+      }
+      
+    } catch (error) {
+      console.error('Error in handleMovieCardClick:', error);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Populate sections with their respective endpoints
+    populateSection('popular', '#popularNowGrid'); // Popular movies
+    populateSection('you-might-like', '#youMightLikeGrid'); // You might like section
+    
+    // Load user's recommendations from database if logged in
+    loadUserRecommendations();
+    
+    // Add click event listeners for movie recommendations
+    document.addEventListener('click', (event) => {
+      // Find the closest movie card to the clicked element
+      const movieCard = event.target.closest('.movie-card');
+      if (movieCard) {
+        const movieId = movieCard.getAttribute('data-id');
+        if (movieId) {
+          handleMovieCardClick(movieId);
+        }
+      }
+    });
+  });
+  
+  // Function to load user's recommendations from the database
+  async function loadUserRecommendations() {
+    const recommendationsContainer = document.querySelector('#recommendations-container');
+    if (!recommendationsContainer) return;
+    
+    const currentUserId = localStorage.getItem('user_id');
+    const authToken = localStorage.getItem('auth_token');
+    
+    if (currentUserId && authToken) {
+      try {
+        // Fetch user's recommendations from the database
+        const response = await fetch(`http://localhost:5000/recommendations/${currentUserId}`, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API returned status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data && data.recommendations && data.recommendations.length > 0) {
+          // Generate movie cards for recommendations
+          const recommendationCards = data.recommendations.map(item => {
+            return `
+              <div class="movie-card" data-id="${item.itemId}">
+                <div class="movie-poster">
+                  <img src="${item.posterUrl || '/placeholder.svg?height=200&width=280'}" alt="${escapeHtml(item.title)}">
+                  <div class="movie-actions">
+                    <button class="watch-btn">Watch Now</button>
+                    <button class="add-list-btn">+ Add to List</button>
+                  </div>
+                </div>
+                <div class="movie-info">
+                  <div class="title-row">
+                    <h3 class="movie-title1">${escapeHtml(item.title)}</h3>
+                  </div>
+                  <div class="movie-meta">
+                    <span class="movie-rating">${item.rating || 'N/A'}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+          
+          recommendationsContainer.innerHTML = `
+            <div class="recommendations-grid movies-grid">
+              ${recommendationCards}
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading user recommendations:', error);
+      }
+    }
+  }
+</script>
+<script>
   (function(){
     function timeOfDay(){
       const h = new Date().getHours();
@@ -3372,11 +2915,193 @@
 </script>
 
 </script>
+
+<!-- JavaScript for Movie Trailer Modal -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Select modal elements
+    const modal = document.getElementById('movie-modal');
+    const closeBtn = document.querySelector('.close-modal');
+    const trailerFrame = document.getElementById('trailer-frame');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDescription = document.getElementById('modal-description');
+    
+    // Event delegation for movie card clicks
+    document.body.addEventListener('click', function(event) {
+      const movieCard = event.target.closest('.movie-card');
+      if (movieCard) {
+        event.preventDefault();
+        
+        // Get movie data from card attributes
+        const trailer = movieCard.getAttribute('data-trailer');
+        const title = movieCard.getAttribute('data-title');
+        const description = movieCard.getAttribute('data-description');
+        const movieId = movieCard.getAttribute('data-id');
+        
+        // Set modal content
+        trailerFrame.src = trailer;
+        modalTitle.textContent = title;
+        modalDescription.textContent = description;
+        
+        // Show modal
+        modal.classList.add('modal-active');
+        
+        // Log watch history if user is logged in
+        const currentUserId = localStorage.getItem('user_id');
+        const authToken = localStorage.getItem('auth_token');
+        
+        if (currentUserId && authToken && movieId) {
+          // Get poster URL and other details from the movie card
+          const posterUrl = movieCard.querySelector('img')?.src || '';
+          const genres = movieCard.getAttribute('data-genre') || '';
+          
+          // Send watch history to the new continue-watching API endpoint
+          fetch(`http://localhost:5000/continue-watching/${currentUserId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+              itemId: movieId,
+              title: title,
+              type: genres.split(' • ')[0] || 'Movie',
+              posterUrl: posterUrl,
+              progress: 50, // Default progress value
+              lastWatched: new Date().toISOString()
+            })
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to update watch history');
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('Watch history updated:', data);
+            // Refresh continue watching section
+            populateContinueWatching();
+          })
+          .catch(error => {
+            console.error('Error updating watch history:', error);
+          });
+        }
+      }
+    });
+    
+    // Close modal when clicking the close button
+    closeBtn.addEventListener('click', function() {
+      modal.classList.remove('modal-active');
+      trailerFrame.src = ''; // Stop video playback
+    });
+    
+    // Close modal when clicking outside the modal content
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        modal.classList.remove('modal-active');
+        trailerFrame.src = ''; // Stop video playback
+      }
+    });
+  });
+</script>
+
+<!-- Movie Trailer Modal -->
+<div id="movie-modal" class="movie-modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <div class="modal-body">
+      <div class="trailer-container">
+        <iframe id="trailer-frame" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="movie-details">
+        <h2 id="modal-title"></h2>
+        <p id="modal-description"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
   /* Clean up: remove old hide/dislike controls visually */
   .hide-btn, .toggle-desc-btn, .dislike-btn, .dislike-icon, .arrow { display:none !important; }
   /* Compact title row without hide control space */
   .title-row { justify-content: flex-start; }
+  
+  /* Modal Styles */
+  .movie-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-active {
+    display: flex;
+  }
+  
+  .modal-content {
+    background-color: #1a1a1a;
+    width: 90%;
+    max-width: 1000px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1001;
+  }
+  
+  .modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .trailer-container {
+    flex: 1 1 60%;
+    min-width: 300px;
+  }
+  
+  .trailer-container iframe {
+    width: 100%;
+    height: 315px;
+  }
+  
+  .movie-details {
+    flex: 1 1 40%;
+    padding: 0 20px;
+    min-width: 250px;
+    color: #fff;
+  }
+  
+  #modal-title {
+    margin-top: 0;
+    color: #e50914;
+  }
+  
+  @media (max-width: 768px) {
+    .modal-body {
+      flex-direction: column;
+    }
+    
+    .movie-details {
+      padding: 20px 0 0 0;
+    }
+  }
 </style>
 
 </html>

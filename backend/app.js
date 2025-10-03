@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const paymentRoutes = require("./routes/payments");
+const recommendationRoutes = require("./routes/recommendations");
+const continueWatchingRoutes = require("./routes/continueWatching");
+const showsRoutes = require("./routes/shows");
 const cors = require('cors');
 
 const app = express();
@@ -24,6 +27,9 @@ mongoose.connect("mongodb://127.0.0.1:27017/Streaming_Platform", {
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/payments", paymentRoutes);
+app.use("/recommendations", recommendationRoutes);
+app.use("/continue-watching", continueWatchingRoutes);
+app.use("/api/shows", showsRoutes);
 
 // Default Route for local development
 app.get("/", (req, res) => {

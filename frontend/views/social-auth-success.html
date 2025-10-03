@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Successful</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0F0F13;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, rgba(51,224,178,0.08) 0%, rgba(0,0,0,0) 70%);
+        }
+        
+        .success-container {
+            background: rgba(15,15,19,0.8);
+            border:1px solid rgba(51,224,178,0.2);
+            border-radius:24px;
+            padding:3rem;
+            width:100%;
+            max-width:450px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.05),inset 0 1px 0 rgba(255,255,255,0.1);
+            text-align: center;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg,#33E0B2,#2BC4A0);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 10px 30px rgba(51,224,178,0.3);
+        }
+        
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+        }
+        
+        h1 {
+            color: #33E0B2;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(51,224,178,0.5);
+        }
+        
+        p {
+            color: #8892b0;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        
+        .redirect-text {
+            font-size: 0.9rem;
+            color: #8892b0;
+            margin-top: 2rem;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(51,224,178,0.3);
+            border-radius: 50%;
+            border-top-color: #33E0B2;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        </div>
+        <h1>Authentication Successful!</h1>
+        <p>You have successfully signed in with your social account.</p>
+        <p class="redirect-text">Redirecting to homepage <span class="loading"></span></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Parse URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const userJson = urlParams.get('user');
+            
+            if (token && userJson) {
+                try {
+                    // Store token in localStorage
+                    localStorage.setItem('auth_token', token);
+                    
+                    // Parse and store user data
+                    const user = JSON.parse(decodeURIComponent(userJson));
+                    localStorage.setItem('user_full_name', user.fullName || '');
+                    localStorage.setItem('user_email', user.email || '');
+                    localStorage.setItem('user_phone', user.phone || '');
+                    localStorage.setItem('user_avatar', user.avatarUrl || '');
+                    localStorage.setItem('user_bio', user.bio || '');
+                    
+                    // Redirect to homepage after a short delay
+                    setTimeout(() => {
+                        window.location.href = '../index.html';
+                    }, 2000);
+                } catch (error) {
+                    console.error('Error processing authentication data:', error);
+                    alert('There was an error processing your login. Please try again.');
+                    window.location.href = 'login.html';
+                }
+            } else {
+                alert('Authentication information missing. Please try logging in again.');
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>
