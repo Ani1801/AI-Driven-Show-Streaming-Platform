@@ -2401,7 +2401,7 @@
       if (youGrid) {
         youGrid.innerHTML = '';
         try {
-          const youRes = await fetch('http://localhost:5000/api/shows/you-might-like');
+          const youRes = await fetch('http://localhost:5000/you-might-like');
           const youData = await youRes.json();
           const youMovies = Array.isArray(youData) ? youData : (youData.shows || []);
           const youCardsHtml = youMovies.map(m => generateMovieCardHTML(m)).join('');
@@ -2418,7 +2418,7 @@
       if (popularGrid) {
         popularGrid.innerHTML = '';
         try {
-          const popularRes = await fetch('http://localhost:5000/api/shows/popular');
+          const popularRes = await fetch('http://localhost:5000/popular');
           const popularData = await popularRes.json();
           const popularMovies = Array.isArray(popularData) ? popularData : (popularData.shows || []);
           const popularCardsHtml = popularMovies.map(m => generateMovieCardHTML(m)).join('');
@@ -2495,8 +2495,8 @@
   async function populateSection(endpoint, containerSelector) {
     try {
       console.log(`Fetching movies from API endpoint: ${endpoint}`);
-      // Using the correct API endpoint format
-      const res = await fetch(`http://localhost:5000/api/shows/${endpoint}`);
+      // Fixed endpoint URL to match backend routes
+      const res = await fetch(`http://localhost:5000/${endpoint}`);
       console.log('API response status:', res.status);
       const data = await res.json();
       console.log('API data received:', data);
@@ -2595,7 +2595,7 @@
     // Step A: Fetch and display new recommendations
     console.log('Step A: Fetching recommendations for movie ID:', movieId);
     try {
-      const response = await fetch(`http://localhost:5000/api/shows/recommendations/${movieId}`);
+      const response = await fetch(`http://localhost:5000/recommendations/${movieId}`);
       
       if (!response.ok) {
         throw new Error(`API returned status ${response.status}`);
