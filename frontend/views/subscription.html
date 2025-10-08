@@ -1,626 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PrimeVision – Subscription</title>
-  <style>
-  /* ====== Reset & Base ====== */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-    color: #ffffff;
-    overflow-x: hidden;
-  }
-  
-  /* ====== Sidebar ====== */
-  .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 280px;
-    height: 100vh;
-    background: rgba(20, 20, 35, 0.95);
-    backdrop-filter: blur(20px);
-    border-right: 1px solid rgba(51, 224, 178, 0.1);
-    padding: 2rem 0;
-    z-index: 101;
-  }
-  
-  .logo-container {
-    padding: 0 2rem 2rem 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 2rem;
-  }
-  
-  .logo-container h1 {
-    color: #33E0B2;
-    font-size: 1.8rem;
-    font-weight: 700;
-    text-shadow: 0 0 15px rgba(51, 224, 178, 0.3);
-  }
-  
-  .logo-container p {
-    color: #8892b0;
-    font-size: 1.2rem;
-    margin-top: 0.5rem;
-  }
-  
-  .nav-menu {
-    list-style: none;
-    padding: 0 1rem;
-  }
-  
-  .nav-item {
-    margin-bottom: 0.5rem;
-  }
-  
-  .nav-link {
-    display: block;
-    padding: 1rem;
-    color: #8892b0;
-    text-decoration: none;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    font-weight: 500;
-  }
-  
-  .nav-link:hover,
-  .nav-link.active {
-    background: rgba(51, 224, 178, 0.1);
-    color: #33E0B2;
-    transform: translateX(5px);
-  }
-  
-  /* ====== Navbar ====== */
-  .navbar {
-    position: fixed;
-    top: 0;
-    left: 280px;
-    right: 0;
-    height: 80px;
-    background: rgba(26, 26, 46, 0.95);
-    border-bottom: 1px solid rgba(51, 224, 178, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 2rem;
-    z-index: 100;
-  }
-  
-  .auth-buttons {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-  
-  .auth-btn {
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-  }
-  
-  .signin-btn {
-    background: transparent;
-    color: #8892b0;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .signin-btn:hover {
-    color: #33E0B2;
-    border-color: #33E0B2;
-  }
-  
-  .signup-btn {
-    background: linear-gradient(135deg, #33E0B2, #2BC4A0);
-    color: #ffffff;
-  }
-  
-  .signup-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(51, 224, 178, 0.3);
-  }
-  
-  /* ====== Main Content ====== */
-  .main-content {
-    margin-left: 280px;
-    margin-top: 80px;
-    padding: 2rem;
-    min-height: calc(100vh - 80px);
-  }
-  
-  /* ====== Subscription Section ====== */
-  .subscription-section {
-    max-width: 1200px;
-    margin: auto;
-    padding: 3rem;
-    background: rgba(26, 26, 46, 0.6);
-    border-radius: 20px;
-    border: 1px solid rgba(51, 224, 178, 0.15);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-  }
-  
-  .subscription-header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-  
-  .subscription-header h1 {
-    font-size: 2.8rem;
-    font-weight: 700;
-    color: #33E0B2;
-    text-shadow: 0 0 10px rgba(51, 224, 178, 0.3);
-  }
-  
-  .subscription-header p {
-    color: #8892b0;
-    font-size: 1.1rem;
-    margin-top: 0.5rem;
-  }
-  
-  .plans-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-  }
-  
-  .plan-card {
-    background: rgba(20, 20, 35, 0.9);
-    border: 2px solid #33E0B2;
-    border-radius: 16px;
-    padding: 2rem;
-    transition: all 0.3s ease;
-    box-shadow: 
-      0 4px 15px rgba(0, 0, 0, 0.2),
-      0 0 0 1px rgba(51, 224, 178, 0.1);
-    position: relative;
-  }
-  
-  .plan-card::before {
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    right: -1px;
-    bottom: -1px;
-    background: linear-gradient(135deg, #33E0B2, #2BC4A0, #33E0B2);
-    border-radius: 16px;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  .plan-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 
-      0 15px 35px rgba(0, 0, 0, 0.3),
-      0 0 20px rgba(51, 224, 178, 0.2);
-  }
-  
-  .plan-card:hover::before {
-    opacity: 1;
-  }
-  
-  .plan-name {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #ffffff;
-    margin-bottom: 0.5rem;
-  }
-  
-  .plan-price {
-    font-size: 1.2rem;
-    color: #33E0B2;
-    margin-bottom: 1rem;
-  }
-  
-  .plan-features {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1.5rem 0;
-    color: #b0b8c9;
-    font-size: 0.95rem;
-  }
-  
-  .plan-features li {
-    margin-bottom: 0.6rem;
-    position: relative;
-    padding-left: 20px;
-  }
-  
-  .plan-features li::before {
-    content: '✔';
-    position: absolute;
-    left: 0;
-    color: #33E0B2;
-    font-size: 0.9rem;
-  }
-  
-  .subscribe-btn {
-    background: linear-gradient(135deg, #33E0B2, #2BC4A0);
-    color: #ffffff;
-    padding: 12px 24px;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-  }
-  
-  .subscribe-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(51, 224, 178, 0.4);
-  }
-  
-  /* ====== Modal Billing Popup ====== */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  }
-  
-  .modal-content {
-    background: #1a1a2e;
-    border-radius: 16px;
-    padding: 2.5rem;
-    width: 95%;
-    max-width: 700px;
-    border: 1px solid rgba(51, 224, 178, 0.2);
-    box-shadow: 0 0 25px rgba(51, 224, 178, 0.2);
-    color: #fff;
-  }
-  
-  
-  .modal-content h2 {
-    color: #33E0B2;
-    margin-bottom: 1rem;
-  }
-  
-  .modal-content label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  
-  .modal-content input[type="checkbox"] {
-    margin-right: 0.75rem;
-    transform: scale(1.2);
-  }
-  
-  .total-cost {
-    margin-top: 1rem;
-    font-size: 1.2rem;
-    color: #33E0B2;
-    font-weight: bold;
-  }
-  
-  .billing-btns {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1.5rem;
-  }
-  
-  .close-btn,
-  .proceed-btn {
-    padding: 10px 20px;
-    border-radius: 25px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .close-btn:hover {
-    color: #33E0B2;
-    border-color: #33E0B2;
-  }
-  
-  .proceed-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(51, 224, 178, 0.3);
-  }
-  
-  /* ====== Responsive ====== */
-  @media (max-width: 768px) {
-    .subscription-header h1 {
-      font-size: 2rem;
-    }
-  
-    .subscription-header p {
-      font-size: 1rem;
-    }
-  
-    .main-content {
-      padding: 1rem;
-    }
-  }
-  
-  .plan-card.premium {
-    border: 2px solid #33E0B2;
-    box-shadow: 
-      0 4px 15px rgba(0, 0, 0, 0.2),
-      0 0 20px rgba(51, 224, 178, 0.3);
-  }
-  
-  .plan-card.premium::before {
-    opacity: 0.7;
-  }
-  </style>
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>PrimeVision – Subscription</title>
+    <style>
+        /* ====== General & Layout ====== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f1014;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+        .sidebar {
+            position: fixed; left: 0; top: 0; width: 280px; height: 100vh;
+            background: rgba(20, 20, 35, 0.95); backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(51, 224, 178, 0.1); padding: 2rem 0; z-index: 101;
+        }
+        .logo-container { padding: 0 2rem 2rem 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 2rem; }
+        .logo-container h1 { color: #33E0B2; font-size: 1.8rem; }
+        .logo-container p { color: #8892b0; font-size: 1.2rem; margin-top: 0.5rem; }
+        .nav-menu { list-style: none; padding: 0 1rem; }
+        .nav-item { margin-bottom: 0.5rem; }
+        .nav-link { display: block; padding: 1rem; color: #8892b0; text-decoration: none; border-radius: 12px; transition: all 0.3s ease; }
+        .nav-link.active, .nav-link:hover { background: rgba(51, 224, 178, 0.1); color: #33E0B2; transform: translateX(5px); }
+        .navbar {
+            position: fixed; top: 0; left: 280px; right: 0; height: 80px;
+            background: rgba(26, 26, 46, 0.95); border-bottom: 1px solid rgba(51, 224, 178, 0.1);
+            display: flex; align-items: center; justify-content: flex-end; padding: 0 2rem; z-index: 100;
+        }
+        .main-content { margin-left: 280px; padding: 2rem; min-height: 100vh; }
+        
+        /* ====== NEW Subscription Design ====== */
+        .subscription-header { text-align: center; margin-bottom: 50px; margin-top: 40px; }
+        .subscription-header h1 { font-size: 2.5rem; color: #fff; margin-bottom: 10px; }
+        .subscription-header p { font-size: 1.1rem; color: #a0a0a0; }
+        .plans-container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        .plan-card {
+            background: #1a1c23; border-radius: 15px; padding: 30px;
+            width: 300px; text-align: center; border: 2px solid transparent;
+            transition: transform 0.3s ease, border-color 0.3s ease; position: relative;
+        }
+        .plan-card:hover { transform: translateY(-10px); }
+        .plan-card h2 { font-size: 1.5rem; color: #fff; margin-bottom: 10px; }
+        .plan-price { font-size: 2.5rem; font-weight: 600; color: #33E0B2; margin: 20px 0; }
+        .plan-price span { font-size: 1rem; font-weight: 400; color: #a0a0a0; }
+        .plan-features { list-style: none; padding: 0; margin: 30px 0; text-align: left; }
+        .plan-features li { margin-bottom: 15px; color: #c0c0c0; }
+        .plan-button {
+            background-color: #33E0B2; color: #0f1014; border: none;
+            border-radius: 8px; padding: 15px 0; width: 100%;
+            font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease;
+        }
+        .plan-button:hover { background-color: #2acaa0; }
+        .plan-card.recommended { border-color: #33E0B2; }
+        .plan-card.recommended::before {
+            content: 'Most Popular'; position: absolute; top: -15px; left: 50%;
+            transform: translateX(-50%); background-color: #33E0B2; color: #0f1014;
+            padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+        }
+        
+        /* Auth Buttons */
+        .auth-buttons button, .auth-buttons a {
+             padding: 10px 20px; border-radius: 20px; font-weight: 500;
+             text-decoration: none; cursor: pointer; border: none; font-size: 0.9rem;
+             transition: all 0.3s ease; background: #33E0B2; color: #1a1a2e;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) { .main-content { margin-left: 0; } .sidebar { display: none; } .navbar{ left: 0; } }
+        @media (max-width: 768px) { .plans-container { flex-direction: column; align-items: center; } .plan-card { width: 100%; max-width: 350px; } }
+    </style>
 </head>
 <body>
 
-    <div class="sidebar">
-    <div class="logo-container">
-      <h1>PrimeVision</h1>
-      <p>Stream Smarter</p>
-    </div>
-    <ul class="nav-menu">
-      <li class="nav-item"><a href="../index.html" class="nav-link">Home</a></li>
-      <li class="nav-item"><a href="explore.html" class="nav-link"> Explore</a></li>
-      <li class="nav-item"><a href="favourites.html" class="nav-link"> Favourites</a></li>
-      <li class="nav-item"><a href="profile.html" class="nav-link"> Profile</a></li>
-      <li class="nav-item"><a href="subscription.html" class="nav-link active"> Subscription</a></li>
-    </ul>
-  </div>
+    <div class="sidebar">
+        <div class="logo-container">
+            <h1>PrimeVision</h1>
+            <p id="greeting">Stream Smarter</p>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="../index.html" class="nav-link">Home</a></li>
+            <li class="nav-item"><a href="explore.html" class="nav-link">Explore</a></li>
+            <li class="nav-item"><a href="favourites.html" class="nav-link">Favourites</a></li>
+            <li class="nav-item"><a href="profile.html" class="nav-link">Profile</a></li>
+            <li class="nav-item"><a href="subscription.html" class="nav-link active">Subscription</a></li>
+        </ul>
+    </div>
 
-    <nav class="navbar">
-    <div class="auth-buttons">
-      <a href="login.html">
-        <button class="auth-btn signin-btn">Sign In</button>
-      </a>
-      <a href="login.html">
-        <button class="auth-btn signup-btn">Sign Up</button>
-      </a>
-    </div>
-  </nav>
+    <nav class="navbar">
+        <div class="auth-buttons">
+            </div>
+    </nav>
 
-    <div class="main-content">
-    <section class="subscription-section">
-      <div class="subscription-header">
-        <h1>Choose Your Plan</h1>
-        <p>Flexible pricing. Unlimited entertainment.</p>
-      </div>
+    <div class="main-content">
+        <header class="subscription-header">
+            <h1>Choose the plan that's right for you</h1>
+            <p>Join PrimeVision and watch the latest movies, shows, and more.</p>
+        </header>
 
-      <div class="plans-container">
-        <div class="plan-card">
-          <h3 class="plan-name">Basic</h3>
-          <p class="plan-price">200₹ / month</p>
-          <ul class="plan-features">
-            <li>720p Streaming</li>
-            <li>Limited Content Access</li>
-            <li>Ads Included</li>
-          </ul>
-          <button class="subscribe-btn" data-plan-id="plan_RLOSUdz24WVCo8" data-price="200">Subscribe</button>
-        </div>
-        <div class="plan-card">
-          <h3 class="plan-name">Standard</h3>
-          <p class="plan-price">500₹ / month</p>
-          <ul class="plan-features">
-            <li>1080p Full HD</li>
-            <li>Unlimited Content</li>
-            <li>No Ads</li>
-            <li>Offline Download</li>
-          </ul>
-          <button class="subscribe-btn" data-plan-id="plan_RLOVzHO5cjTKE1" data-price="500">Subscribe</button>
-        </div>
-        <div class="plan-card premium">
-          <h3 class="plan-name">Premium</h3>
-          <p class="plan-price">700₹ / month</p>
-          <ul class="plan-features">
-            <li>4K Ultra HD + HDR</li>
-            <li>Early Access to Releases</li>
-            <li>Multiple Devices</li>
-            <li>Offline Mode</li>
-          </ul>
-          <button class="subscribe-btn" data-plan-id="plan_RLOY26zZemEEmO" data-price="700">Subscribe</button>
-        </div>
-      </div>
-    </section>
-  </div>
+        <div class="plans-container">
+            <div class="plan-card">
+                <h2>Basic</h2>
+                <p class="plan-price">₹199<span>/month</span></p>
+                <ul class="plan-features">
+                    <li>✅ Watch on 1 screen at a time</li>
+                    <li>✅ Standard Definition (SD)</li>
+                    <li>- No offline downloads</li>
+                </ul>
+                <button class="plan-button" data-plan-id="plan_RQe7slW9PQa84M">Choose Basic</button>
+            </div>
 
-    <div class="modal-overlay" id="billingModal">
-    <div class="modal-content">
-      <h2>Customize Your Plan</h2>
-      <p id="selected-plan" style="margin-bottom: 1rem; color: #b0b8c9;"></p>
+            <div class="plan-card recommended">
+                <h2>Standard</h2>
+                <p class="plan-price">₹499<span>/month</span></p>
+                <ul class="plan-features">
+                    <li>✅ Watch on 2 screens at once</li>
+                    <li>✅ High Definition (HD)</li>
+                    <li>✅ Offline downloads included</li>
+                </ul>
+                <button class="plan-button" data-plan-id="plan_RQe8qQiBQaiQYw">Choose Standard</button>
+            </div>
 
-      <label><input type="checkbox" class="addon" value="120" /> Add Extra Screen (+120₹)</label>
-      <label><input type="checkbox" class="addon" value="150" /> Exclusive Movies Access (+150₹)</label>
-      <label><input type="checkbox" class="addon" value="89" /> Parental Controls (+89₹)</label>
+            <div class="plan-card">
+                <h2>Premium</h2>
+                <p class="plan-price">₹799<span>/month</span></p>
+                <ul class="plan-features">
+                    <li>✅ Watch on 4 screens at once</li>
+                    <li>✅ Ultra High Definition (4K)</li>
+                    <li>✅ Offline downloads included</li>
+                </ul>
+                <button class="plan-button" data-plan-id="plan_RQe9H2mnDm5zQA
+">Choose Premium</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('auth_token');
+            const userId = localStorage.getItem('user_id');
 
-      <div class="total-cost" id="totalCost">Total: ₹0.00</div>
+            renderAuthButton(token);
+            updateGreeting(token);
 
-      <div class="billing-btns">
-        <button class="close-btn" onclick="closeModal()">Cancel</button>
-        <button class="proceed-btn">Proceed to Billing</button>
-      </div>
-    </div>
-  </div>
+            document.querySelectorAll(".plan-button").forEach(button => {
+                button.addEventListener("click", () => {
+                    if (!token) {
+                        alert("Please sign in to subscribe.");
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    const planId = button.dataset.planId;
+                    handlePayment(planId);
+                });
+            });
+        });
 
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script>
-    const modal = document.getElementById("billingModal");
-    const subscribeButtons = document.querySelectorAll(".subscribe-btn");
-    const totalCostElement = document.getElementById("totalCost");
-    const planText = document.getElementById("selected-plan");
-    let basePrice = 0;
-    let selectedPlanId = null;
+        function renderAuthButton(token) {
+            const authContainer = document.querySelector('.auth-buttons');
+            if (!authContainer) return;
+            if (token) {
+                authContainer.innerHTML = '<button id="signOutBtn">Sign Out</button>';
+                document.getElementById('signOutBtn').addEventListener('click', handleSignOut);
+            } else {
+                authContainer.innerHTML = '<a href="login.html"><button>Sign In</button></a>';
+            }
+        }
 
-    subscribeButtons.forEach(button => {
-      button.addEventListener("click", () => {
-        const plan = button.dataset.plan || button.closest('.plan-card')?.querySelector('.plan-name')?.textContent?.trim() || 'Selected Plan';
-        basePrice = parseFloat(button.dataset.price);
-        selectedPlanId = button.getAttribute('data-plan-id');
-        // expose for payment handler script
-        window.selectedPlanId = selectedPlanId;
-        planText.textContent = `Plan: ${plan} - ₹${basePrice.toFixed(2)}`;
-        modal.style.display = "flex";
-        updateTotal();
-        document.querySelectorAll(".addon").forEach(cb => cb.checked = false);
-      });
-    });
+        function handleSignOut() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user_id');
+            localStorage.removeItem('user_full_name');
+            window.location.href = 'login.html';
+        }
 
-    document.querySelectorAll(".addon").forEach(checkbox => {
-      checkbox.addEventListener("change", updateTotal);
-    });
+        function updateGreeting(token) {
+            const greetingEl = document.getElementById('greeting');
+            if (!greetingEl) return;
+            const fullName = localStorage.getItem('user_full_name');
+            if (token && fullName) {
+                greetingEl.textContent = `Hello, ${fullName.split(' ')[0]}`;
+            }
+        }
 
-    function updateTotal() {
-      let total = basePrice;
-      document.querySelectorAll(".addon:checked").forEach(cb => {
-        total += parseFloat(cb.value);
-      });
-      totalCostElement.textContent = `Total: ₹${total.toFixed(2)}`;
-    }
+        async function handlePayment(planId) {
+            try {
+                // --- FIX #1: CORRECT API URL ---
+                const subRes = await fetch('http://localhost:5000/api/payments/create-subscription', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ planId: planId})
+                });
+                const subData = await subRes.json();
+                if (!subRes.ok) throw new Error(subData.description || 'Failed to create subscription');
+                
+                const options = {
+                    key: subData.keyId,
+                    subscription_id: subData.subscription.id,
+                    name: 'PrimeVision Subscription',
+                    handler: async function (response) {
+                        // --- FIX #1: CORRECT API URL ---
+                        const verifyRes = await fetch('http://localhost:5000/api/payments/verify', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(response)
+                        });
+                        const verifyData = await verifyRes.json();
+                        if (verifyRes.ok) {
+                            alert(verifyData.message || 'Payment successful!');
+                        } else {
+                            throw new Error(verifyData.message || 'Payment verification failed.');
+                        }
+                    }
+                };
+                const rzp = new Razorpay(options);
+                rzp.open();
+            } catch (err) {
+                console.error("Payment Error:", err);
+                alert(err.message);
+            }
+        }
+    </script>
 
-    function closeModal() {
-      modal.style.display = "none";
-    }
-
-    window.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
-  </script>
-  <script>
-    (function(){
-      async function createSubscription(planId){
-        const res = await fetch('http://localhost:5000/payments/create-subscription', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ planId })
-        });
-        const out = await res.json().catch(()=>({}));
-        if (!res.ok) throw new Error(out.description || out.message || 'Failed to create subscription');
-        return out;
-      }
-
-      function openCheckout({ subscription, keyId }){
-        return new Promise((resolve, reject) => {
-          const options = {
-            key: keyId,
-            subscription_id: subscription.id,
-            name: 'PrimeVision',
-            description: 'Subscription',
-            theme: { color: '#33E0B2' },
-            handler: function (response) { resolve(response); },
-            modal: { ondismiss: function(){ reject(new Error('Dismissed')); } }
-          };
-          const rzp = new Razorpay(options);
-          rzp.open();
-        });
-      }
-
-      async function verifyPayment(payload){
-        const res = await fetch('http://localhost:5000/payments/verify', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const out = await res.json().catch(()=>({}));
-        if (!res.ok) throw new Error(out.description || out.message || 'Verification failed');
-        return out;
-      }
-
-      // Proceed to Billing in modal triggers payment (respects selected plan)
-      const proceedBtn = document.querySelector('.proceed-btn');
-      proceedBtn.addEventListener('click', async () => {
-        try{
-          const planId = window.selectedPlanId || document.querySelector('.subscribe-btn')?.getAttribute('data-plan-id');
-          if (!planId) throw new Error('No plan selected');
-          const data = await createSubscription(planId);
-          closeModal();
-          const resp = await openCheckout(data);
-          const result = await verifyPayment(resp);
-          alert(result.message || 'Subscription activated (test).');
-        }catch(err){
-          console.error(err);
-          alert(err.message || 'Subscription failed or cancelled.');
-        }
-      });
-    })();
-  </script>
 </body>
-<script>
-  (function(){
-    function timeOfDay(){
-      const h = new Date().getHours();
-      if (h < 12) return 'Good morning';
-      if (h < 17) return 'Good afternoon';
-      return 'Good evening';
-    }
-    function firstNameOf(fullName){
-      if(!fullName) return '';
-      return fullName.trim().split(/\s+/)[0];
-    }
-    function setGreeting(){
-      try {
-        const name = localStorage.getItem('user_full_name') || '';
-        const greeting = name ? `${timeOfDay()}, ${firstNameOf(name)}` : `${timeOfDay()}!`;
-        const logoP = document.querySelector('.logo-container p');
-        if (logoP) logoP.textContent = greeting;
-        const anyGreetingEl = document.getElementById('greetingText');
-        if (anyGreetingEl) anyGreetingEl.textContent = greeting;
-      } catch(e) {}
-    }
-    let greetingTimer;
-    function refreshFromApi(){
-      const token = localStorage.getItem('auth_token');
-      if(!token) { setGreeting(); return; }
-      fetch('http://localhost:5000/users/me', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      }).then(r => r.json()).then(data => {
-        if(data && data.user){
-          localStorage.setItem('user_full_name', data.user.fullName || '');
-          localStorage.setItem('user_email', data.user.email || '');
-        }
-  (function authButtons(){
-    document.addEventListener('DOMContentLoaded', function(){
-      const navRight = document.querySelector('.auth-buttons, .user-actions');
-      if (!navRight) return;
-      const token = localStorage.getItem('auth_token');
-      if (token) {
-        navRight.innerHTML = '<button class="sign-up-btn" id="navSignOut">Sign Out</button>';
-        document.getElementById('navSignOut').addEventListener('click', function(){
-          try { localStorage.removeItem('auth_token'); } catch(e){}
-          window.location.href = 'login.html';
-        });
-      } else {
-        navRight.innerHTML = '<button class="sign-up-btn" id="navSignIn">Sign In</button>';
-        document.getElementById('navSignIn').addEventListener('click', function(){
-          window.location.href = 'login.html';
-        });
-      }
-    });
-  })();
-        setGreeting();
-      }).catch(setGreeting);
-      if (greetingTimer) clearTimeout(greetingTimer);
-      greetingTimer = setTimeout(setGreeting, 60 * 1000);
-    }
-    document.addEventListener('DOMContentLoaded', function(){
-      refreshFromApi();
-    });
-  })();
-</script>
 </html>

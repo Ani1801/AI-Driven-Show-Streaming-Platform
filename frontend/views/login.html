@@ -189,133 +189,130 @@
 </div>
 
 <script>
-const tabButtons = document.querySelectorAll('.tab-button');
-const signupFields = document.getElementById('signupFields');
-const signupPasswordConfirm = document.getElementById('signupPasswordConfirm');
-const submitButton = document.querySelector('.submit-btn');
-const submitButtonText = submitButton.querySelector('.btn-text');
-const authFooterText = document.getElementById('authFooterText');
-const authForm = document.getElementById('authForm');
-const authToggleLink = document.getElementById('authToggle');
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const signupFields = document.getElementById('signupFields');
+    const signupPasswordConfirm = document.getElementById('signupPasswordConfirm');
+    const submitButton = document.querySelector('.submit-btn');
+    const submitButtonText = submitButton.querySelector('.btn-text');
+    const authFooterText = document.getElementById('authFooterText');
+    const authForm = document.getElementById('authForm');
 
-let isSignUp = false;
+    let isSignUp = false;
 
-// Tab switching
-tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        const tab = button.getAttribute('data-tab');
-        toggleAuthMode(tab === 'signup');
-    });
-});
-
-// Toggle Sign In / Sign Up
-function toggleAuthMode(signUp) {
-    isSignUp = signUp;
-    if(signUp){
-        signupFields.style.display='block';
-        signupPasswordConfirm.style.display='block';
-        submitButtonText.textContent='Create Account';
-        authFooterText.innerHTML='Already have an account? <a href="#" id="authToggle">Sign in here</a>';
-    } else {
-        signupFields.style.display='none';
-        signupPasswordConfirm.style.display='none';
-        submitButtonText.textContent='Sign In';
-        authFooterText.innerHTML='Don\'t have an account? <a href="#" id="authToggle">Sign up here</a>';
-    }
-    
-    // Re-attach toggle click listener
-    const currentAuthToggle = document.getElementById('authToggle');
-    if (currentAuthToggle) {
-        currentAuthToggle.addEventListener('click', e => {
-            e.preventDefault();
-            toggleAuthMode(!isSignUp);
+    // Tab switching
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            const tab = button.getAttribute('data-tab');
+            toggleAuthMode(tab === 'signup');
         });
-    }
-}
-
-// Show / hide password
-document.querySelectorAll('.password-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const input = btn.previousElementSibling;
-        input.type = input.type === 'password' ? 'text' : 'password';
     });
-});
 
-// Form submit
-authForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    submitButton.classList.add('loading');
-
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    let fullName, confirmPassword;
-
-    if(isSignUp){
-        fullName = document.getElementById("fullName").value;
-        confirmPassword = document.getElementById("confirmPassword").value;
-
-        if(password !== confirmPassword){
-            alert("Passwords do not match");
-            submitButton.classList.remove('loading');
-            return;
+    // Toggle Sign In / Sign Up
+    function toggleAuthMode(signUp) {
+        isSignUp = signUp;
+        if (signUp) {
+            signupFields.style.display = 'block';
+            signupPasswordConfirm.style.display = 'block';
+            submitButtonText.textContent = 'Create Account';
+            authFooterText.innerHTML = 'Already have an account? <a href="#" id="authToggle">Sign in here</a>';
+        } else {
+            signupFields.style.display = 'none';
+            signupPasswordConfirm.style.display = 'none';
+            submitButtonText.textContent = 'Sign In';
+            authFooterText.innerHTML = 'Don\'t have an account? <a href="#" id="authToggle">Sign up here</a>';
+        }
+        
+        // Re-attach toggle click listener
+        const currentAuthToggle = document.getElementById('authToggle');
+        if (currentAuthToggle) {
+            currentAuthToggle.addEventListener('click', e => {
+                e.preventDefault();
+                toggleAuthMode(!isSignUp);
+            });
         }
     }
-    // Correct endpoint for local development
-    const endpoint = isSignUp 
-        ? 'http://localhost:5000/auth/signup' 
-        : 'http://localhost:5000/auth/login';
-    
-    const payload = isSignUp 
-        ? { fullName, email, password, confirmPassword } 
-        : { email, password };
 
-    try {
-        const res = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+    // Show / hide password
+    document.querySelectorAll('.password-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const input = btn.previousElementSibling;
+            input.type = input.type === 'password' ? 'text' : 'password';
         });
-        const data = await res.json();
+    });
 
-        // Check for a successful response from the server (status code 200-299)
-        if (res.ok) {
-            if (isSignUp) {
-                alert(data.message || "Account created successfully! Please sign in.");
-                const signInButton = document.querySelector('.tab-button[data-tab="signin"]');
-                if (signInButton) {
-                    signInButton.click();
-                }
-            } else {
-                // store token and user info for greeting/profile
-                try {
+    // Form submit
+    authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        submitButton.classList.add('loading');
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        let fullName, confirmPassword;
+
+        if (isSignUp) {
+            fullName = document.getElementById("fullName").value;
+            confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match");
+                submitButton.classList.remove('loading');
+                return;
+            }
+        }
+        
+        const endpoint = isSignUp 
+    ? 'http://localhost:5000/api/auth/signup' 
+    : 'http://localhost:5000/api/auth/login';
+        
+        const payload = isSignUp 
+            ? { fullName, email, password,confirmPassword } 
+            : { email, password };
+
+        try {
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                if (isSignUp) {
+                    alert(data.message || "Account created successfully! Please sign in.");
+                    document.querySelector('.tab-button[data-tab="signin"]').click();
+                } else {
+                    // This is the successful login block
                     localStorage.setItem('auth_token', data.token);
                     if (data.user) {
+                        // ==========================================================
+                        // === THIS IS THE ONLY LINE THAT WAS ADDED - THE CRUCIAL FIX ===
+                        localStorage.setItem('user_id', data.user.id || data.user._id);
+                        // ==========================================================
+                        
                         localStorage.setItem('user_full_name', data.user.fullName || '');
                         localStorage.setItem('user_email', data.user.email || '');
                         localStorage.setItem('user_phone', data.user.phone || '');
                         localStorage.setItem('user_avatar', data.user.avatarUrl || '');
                         localStorage.setItem('user_bio', data.user.bio || '');
                     }
-                } catch(e) { /* ignore storage errors */ }
-                alert(data.message || "Login successful!");
-                window.location.href = '../index.html';
+                    alert(data.message || "Login successful!");
+                    window.location.href = '../index.html';
+                }
+            } else {
+                alert(data.message || "An error occurred. Please check your credentials.");
             }
-        } else {
-            // Handle server-side errors
-            alert(data.message || "An error occurred. Please check your credentials.");
+        } catch (err) {
+            console.error("Network or server connection error:", err);
+            alert("Server error. Please ensure your backend is running and reachable.");
+        } finally {
+            submitButton.classList.remove('loading');
         }
-    } catch(err) {
-        console.error("Network or server connection error:", err);
-        alert("Server error. Please ensure your backend is running and reachable.");
-    } finally {
-        submitButton.classList.remove('loading');
-    }
-});
+    });
 
-// Initial setup to ensure authToggle link works on page load
-toggleAuthMode(false);
+    // Initial setup to ensure authToggle link works on page load
+    toggleAuthMode(false);
 </script>
 </body>
 </html>

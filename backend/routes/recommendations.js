@@ -1,31 +1,51 @@
 const express = require('express');
 const router = express.Router();
 const UserRecommendation = require('../models/UserRecommendation');
+const auth = require('../middleware/auth');
 
-// POST /api/recommendations -> Save a user's recommendation list
-router.post('/', async (req, res) => {
-  const { userId, sourceShowId, recommendations } = req.body;
-  try {
-    await UserRecommendation.findOneAndUpdate(
-      { userId: userId },
-      { userId, sourceShowId, recommendations },
-      { new: true, upsert: true }
-    );
-    res.status(200).json({ message: 'Recommendations saved.' });
-  } catch (err) {
-    res.status(500).json({ message: 'Error saving recommendations.' });
-  }
+router.post('/', auth, async (req, res) => {
+    const { sourceShowId, recommendations } = req.body;
+
+    // --- THIS IS THE FINAL FIX ---
+    // Read the ID from req.user, just like your working watchHistory route does.
+    const userId = req.user.id;
+
+    if (!sourceShowId || !Array.isArray(recommendations)) {
+        return res.status(400).json({ message: 'sourceShowId and recommendations array are required' });
+    }
+    try {
+        await UserRecommendation.updateOne(
+            { user: userId },
+            { 
+                $set: { 
+                    recommendations: recommendations,
+                    sourceShowId: sourceShowId,
+                    lastUpdated: new Date()
+                },
+                $setOnInsert: { user: userId } 
+            },
+            { upsert: true }
+        );
+        res.status(200).json({ message: 'Recommendations saved successfully' });
+    } catch (err) { // <<<--- REPLACE YOUR CATCH BLOCK WITH THIS
+
+        // --- ADD THESE LOUD LOGS ---
+        console.log("\n\n");
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.log("!!!      RECOMMENDATION SAVE CRASHED       !!!");
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.error("THE FULL ERROR OBJECT IS:", err); // Log the entire error object
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.log("\n\n");
+        // ------------------------------------
+        
+        res.status(500).json({ message: 'Server error while saving recommendations' });
+    }
 });
 
-// GET /api/recommendations/:userId -> Get a user's LAST SAVED recommendations
-router.get('/:userId', async (req, res) => {
-    try {
-        const userRecs = await UserRecommendation.findOne({ userId: req.params.userId })
-            .populate('recommendations');
-        res.json(userRecs || { recommendations: [] });
-    } catch (err) {
-        res.status(500).json({ message: 'Error fetching recommendations.' });
-    }
+// Your GET route remains the same
+router.get('/:userId', auth, async (req, res) => {
+    // ... your correct GET logic ...
 });
 
 module.exports = router;

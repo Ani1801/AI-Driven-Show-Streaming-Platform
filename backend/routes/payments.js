@@ -3,55 +3,64 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 
 const router = express.Router();
+console.log("--- DEBUGGING RAZORPAY KEYS ---");
+console.log("Key ID Loaded from .env:", process.env.RAZORPAY_KEY_ID);
+console.log("Key Secret Loaded from .env:", process.env.RAZORPAY_KEY_SECRET);
+console.log("---------------------------------");
+// --- THIS IS THE FIX: Remove the quotes and semicolon ---
+const keyId = process.env.RAZORPAY_KEY_ID;
+const keySecret = process.env.RAZORPAY_KEY_SECRET;
 
-// The keys should be loaded from process.env by app.js
-// For a quick fix, we are hardcoding the keys here.
-// In a production environment, always use process.env to secure your keys.
-const keyId = 'rzp_test_RLOdBiPXEx84Ld'; // <--- PASTE YOUR KEY ID HERE
-const keySecret = '6Gp55f25Xnd4VFz8GQtTE'; // <--- PASTE YOUR KEY SECRET HERE
-
-// Check if keys were loaded successfully
+// Check if keys were loaded from your .env file
 if (!keyId || !keySecret) {
-    console.error("Critical Error: Razorpay API keys are not loaded.");
+    console.error("CRITICAL ERROR: Razorpay API keys are not loaded. Check your .env file.");
 }
 
 const razorpay = new Razorpay({ key_id: keyId, key_secret: keySecret });
 
-// Create a subscription (test mode)
+// Create a subscription
 router.post('/create-subscription', async (req, res) => {
-  try {
-    const { planId } = req.body;
-    const options = {
-      plan_id: planId,
-      total_count: 12,
-      customer_notify: 1,
-    };
-    const subscription = await razorpay.subscriptions.create(options);
-    res.json({ subscription, keyId: keyId }); // Pass keyId to the frontend
-  } catch (err) {
-    const desc = err?.error?.description || err?.message || 'Unknown error';
-    console.error('Razorpay create-subscription error:', err?.error || err);
-    res.status(500).json({ message: 'Failed to create subscription', description: desc });
-  }
+    try {
+        const { planId } = req.body;
+        if (!planId) {
+            return res.status(400).json({ message: 'planId is required' });
+        }
+        const options = {
+            plan_id: planId,
+            total_count: 12,
+            customer_notify: 1,
+        };
+        const subscription = await razorpay.subscriptions.create(options);
+        res.json({ subscription, keyId: keyId });
+    } catch (err) {
+        const desc = err?.error?.description || err?.message || 'Unknown error';
+        console.error('Razorpay create-subscription error:', err);
+        res.status(500).json({ message: 'Failed to create subscription', description: desc });
+    }
 });
 
-// Verify payment signature after Checkout success
+// Verify payment signature
 router.post('/verify', async (req, res) => {
-  try {
-    const { razorpay_payment_id, razorpay_subscription_id, razorpay_signature } = req.body;
-    const payload = razorpay_payment_id + '|' + razorpay_subscription_id;
-    const expectedSignature = crypto.createHmac('sha256', keySecret).update(payload).digest('hex');
-    const isAuth = expectedSignature === razorpay_signature;
-    if (!isAuth) {
-        console.error('Signature verification failed.');
-        return res.status(400).json({ message: 'Invalid signature' });
+    try {
+        const { razorpay_payment_id, razorpay_subscription_id, razorpay_signature } = req.body;
+        
+        const payload = `${razorpay_payment_id}|${razorpay_subscription_id}`;
+        
+        const expectedSignature = crypto
+            .createHmac('sha256', keySecret)
+            .update(payload)
+            .digest('hex');
+
+        if (expectedSignature !== razorpay_signature) {
+            return res.status(400).json({ message: 'Invalid payment signature' });
+        }
+        
+        res.json({ message: 'Payment verified successfully' });
+    } catch (err) {
+        const desc = err?.error?.description || err?.message || 'Unknown error';
+        console.error('Razorpay verify error:', err);
+        res.status(500).json({ message: 'Verification failed', description: desc });
     }
-    res.json({ message: 'Payment verified' });
-  } catch (err) {
-    const desc = err?.error?.description || err?.message || 'Unknown error';
-    console.error('Razorpay verify error:', err?.error || err);
-    res.status(500).json({ message: 'Verification failed', description: desc });
-  }
 });
 
 module.exports = router;

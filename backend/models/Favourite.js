@@ -1,17 +1,19 @@
 const mongoose = require("mongoose");
 
 const favouriteSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true, required: true },
-  itemId: { type: String, required: true },
-  title: { type: String, required: true },
-  type: { type: String, enum: ["movie", "show", "other"], default: "movie" },
-  posterUrl: { type: String, default: "" },
-  rating: { type: Number, default: 0 },
-  addedAt: { type: Date, default: Date.now }
+    user: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', 
+        required: true 
+    },
+    show: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Show', 
+        required: true 
+    }
 }, { timestamps: true });
 
-favouriteSchema.index({ user: 1, itemId: 1 }, { unique: true });
+// This ensures a user can only favourite a show once
+favouriteSchema.index({ user: 1, show: 1 }, { unique: true });
 
 module.exports = mongoose.model("Favourite", favouriteSchema);
-
-
