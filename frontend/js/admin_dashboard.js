@@ -11,8 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDashboard(token);
 
     // Setup logout button
-    setupLogout(); // Pass token if needed inside setupLogout
+    setupLogout();
 });
+
+// === ADD YOUR LIVE BACKEND URL HERE ===
+const API_BASE_URL = 'https://ai-driven-show-streaming-platform-1.onrender.com/api';
 
 /**
  * Fetches initial dashboard stats (KPIs) AND Kaggle user count.
@@ -21,15 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
 async function initializeDashboard(token) {
     // --- Fetch Live Stats (Shows, potentially Revenue/WatchTime) ---
     try {
-        // Fetch KPIs from the admin endpoint (uses live data counts)
-        const response = await fetch('/api/admin/stats', {
+        // Fetch KPIs from the admin endpoint
+        // === UPDATE URL HERE ===
+        const response = await fetch(`${API_BASE_URL}/admin/stats`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
         // Handle authentication errors
         if (response.status === 401 || response.status === 403) {
             alert('Access Denied or Session Expired. Please log in again.');
-            localStorage.removeItem('auth_token'); // Clear potentially bad token
+            localStorage.removeItem('auth_token');
             localStorage.removeItem('user_id');
             window.location.href = '/views/login.html';
             return; // Stop execution
@@ -43,8 +47,8 @@ async function initializeDashboard(token) {
 
         // Update KPIs based on LIVE data (except users, which we'll overwrite)
         document.getElementById('total-shows-metric').textContent = liveStats.shows || '0';
-        document.getElementById('total-revenue-metric').textContent = liveStats.revenue ? `$${liveStats.revenue.toFixed(2)}` : '$0.00'; // Assumes backend provides this
-        document.getElementById('total-watch-time-metric').textContent = liveStats.watchTime ? `${Math.round(liveStats.watchTime)}` : '0'; // Assumes backend provides this
+        document.getElementById('total-revenue-metric').textContent = liveStats.revenue ? `$${liveStats.revenue.toFixed(2)}` : '$0.00';
+        document.getElementById('total-watch-time-metric').textContent = liveStats.watchTime ? `${Math.round(liveStats.watchTime)}` : '0';
 
         // Now fetch the table data since authentication passed
         fetchRecentShows(token); // Fetches live recent shows
@@ -52,18 +56,16 @@ async function initializeDashboard(token) {
 
     } catch (error) {
         console.error("Error during dashboard initialization:", error);
-        // Display a user-friendly error message on the page if desired
-        // Also clear potentially bad token if auth check failed unexpectedly
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user_id');
         // window.location.href = '/views/login.html'; // Optional: redirect on any init error
     }
 
     // --- Fetch Kaggle User Count ---
-    // This is done separately as it uses a different data source and API endpoint
     try {
-        // Fetch segment data from the analysis endpoint (currently bypasses auth)
-        const segmentResponse = await fetch('/api/analysis/segment-counts');
+        // Fetch segment data from the analysis endpoint
+        // === UPDATE URL HERE ===
+        const segmentResponse = await fetch(`${API_BASE_URL}/analysis/segment-counts`);
         // If auth is re-enabled later, add headers: { 'Authorization': `Bearer ${token}` }
 
         if (!segmentResponse.ok) {
@@ -79,24 +81,24 @@ async function initializeDashboard(token) {
 
     } catch (error) {
         console.error("Error fetching Kaggle user count:", error);
-        document.getElementById('total-users-metric').textContent = 'Error'; // Show error on card
+        document.getElementById('total-users-metric').textContent = 'Error';
     }
 }
-
 
 /**
  * Fetches Recently Added Shows (from live data) and populates the table.
  */
 async function fetchRecentShows(token) {
     try {
-        const response = await fetch('/api/admin/shows', {
+        // === UPDATE URL HERE ===
+        const response = await fetch(`${API_BASE_URL}/admin/shows`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
-        if (!response.ok) { return; } // Silently fail for non-critical data
+        if (!response.ok) { return; }
 
         const shows = await response.json();
-        const tableBody = document.getElementById('recent-shows-body'); // Make sure this ID exists in your HTML
+        const tableBody = document.getElementById('recent-shows-body');
         tableBody.innerHTML = '';
 
         shows.slice(0, 5).forEach(show => {
@@ -118,14 +120,15 @@ async function fetchRecentShows(token) {
  */
 async function fetchAssociationRules(token) {
     try {
-        // Fetch rules from the analysis endpoint (currently bypasses auth)
-        const response = await fetch('/api/analysis/association-rules');
+        // Fetch rules from the analysis endpoint
+        // === UPDATE URL HERE ===
+        const response = await fetch(`${API_BASE_URL}/analysis/association-rules`);
         // If auth is re-enabled later, add headers: { 'Authorization': `Bearer ${token}` }
 
         if (!response.ok) { return; }
 
         const data = await response.json();
-        const tableBody = document.getElementById('rules-table-body'); // Make sure this ID exists in your HTML
+        const tableBody = document.getElementById('rules-table-body');
         tableBody.innerHTML = '';
 
         if (!data || data.length === 0) {
@@ -133,7 +136,6 @@ async function fetchAssociationRules(token) {
             return;
         }
 
-        // Populate table, showing top 5 rules
         data.slice(0, 5).forEach(rule => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -149,13 +151,11 @@ async function fetchAssociationRules(token) {
     }
 }
 
-
 /**
  * Sets up the logout button functionality.
  */
-function setupLogout() { // Removed token parameter as it's not strictly needed here
-    // Assuming your logout button has id="signOutBtn"
-    const signOutBtn = document.getElementById('signOutBtn'); // Make sure this ID exists in your HTML
+function setupLogout() {
+    const signOutBtn = document.getElementById('signOutBtn');
     if (signOutBtn) {
         signOutBtn.addEventListener('click', (e) => {
             e.preventDefault();

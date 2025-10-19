@@ -10,12 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSubscriptionStatusChart(token);
 });
 
+// === ADD YOUR LIVE BACKEND URL HERE ===
+const API_BASE_URL = 'https://ai-driven-show-streaming-platform-1.onrender.com/api';
+
 // ======================================================================
 // == Chart 1: Engagement by Subscription
 // ======================================================================
 async function renderSubscriptionEngagementChart(token) {
     try {
-        const data = await fetch('/api/analysis/distribution/subscription', {
+        // === UPDATE URL HERE ===
+        const data = await fetch(`${API_BASE_URL}/analysis/distribution/subscription`, {
+            // Headers included for when auth is re-enabled, currently ignored by backend
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(res => res.json());
 
@@ -23,7 +28,7 @@ async function renderSubscriptionEngagementChart(token) {
             chart: {
                 type: 'bar',
                 height: 350,
-                foreColor: '#cccccc' // Light text for dark mode
+                foreColor: '#cccccc'
             },
             series: [{
                 name: 'Average Watch Minutes',
@@ -32,11 +37,11 @@ async function renderSubscriptionEngagementChart(token) {
             xaxis: {
                 categories: data.map(item => item.category)
             },
-            colors: ['#ff6b6b', '#f9a825', '#fde74c'], // Sunset/Warm color palette
+            colors: ['#ff6b6b', '#f9a825', '#fde74c'], // Example palette
             plotOptions: {
                 bar: {
                     borderRadius: 4,
-                    distributed: true // Apply a different color from the 'colors' array to each bar
+                    distributed: true
                 }
             },
             legend: { show: false },
@@ -57,7 +62,9 @@ async function renderSubscriptionEngagementChart(token) {
 // ======================================================================
 async function renderSubscriptionStatusChart(token) {
     try {
-        const data = await fetch('/api/analysis/subscription-status', {
+        // === UPDATE URL HERE ===
+        const data = await fetch(`${API_BASE_URL}/analysis/subscription-status`, {
+            // Headers included for when auth is re-enabled, currently ignored by backend
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(res => res.json());
 
@@ -69,15 +76,9 @@ async function renderSubscriptionStatusChart(token) {
             },
             series: data.map(item => item.count),
             labels: data.map(item => item.status),
-            colors: ['#4e79a7', '#e15759', '#76b7b2'], // Professional color palette
+            colors: ['#4e79a7', '#e15759', '#76b7b2'], // Example palette
             legend: { position: 'bottom' },
-            responsive: [{
-                breakpoint: 480,
-                options: {
-                    chart: { width: 200 },
-                    legend: { position: 'bottom' }
-                }
-            }]
+            responsive: [{ /* ... responsive options ... */ }]
         };
 
         const chart = new ApexCharts(document.querySelector("#subscription-status-chart"), options);

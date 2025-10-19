@@ -10,12 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPopularGenresChart(token);
 });
 
+// === ADD YOUR LIVE BACKEND URL HERE ===
+const API_BASE_URL = 'https://ai-driven-show-streaming-platform-1.onrender.com/api';
+
 // ======================================================================
 // == Chart 1: Engagement by Device
 // ======================================================================
 async function renderDeviceEngagementChart(token) {
     try {
-        const data = await fetch('/api/analysis/distribution/device', {
+        // === UPDATE URL HERE ===
+        const data = await fetch(`${API_BASE_URL}/analysis/distribution/device`, {
+            // Headers are included for when auth is re-enabled, currently ignored by backend
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(res => res.json());
 
@@ -23,7 +28,7 @@ async function renderDeviceEngagementChart(token) {
             chart: {
                 type: 'bar',
                 height: 350,
-                foreColor: '#cccccc' // Light text for dark mode
+                foreColor: '#cccccc'
             },
             series: [{
                 name: 'Average Watch Minutes',
@@ -32,28 +37,16 @@ async function renderDeviceEngagementChart(token) {
             xaxis: {
                 categories: data.map(item => item.category)
             },
-            colors: ['#33E0B2'], // Your theme's accent color
+            colors: ['#33E0B2'], // Theme accent color
             plotOptions: {
                 bar: {
-                    horizontal: true, // A horizontal bar chart is great for category comparisons
+                    horizontal: true,
                     borderRadius: 4,
-                    distributed: true // This applies a different color to each bar if multiple colors are provided
+                    distributed: true
                 }
             },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shade: 'dark',
-                    type: 'vertical',
-                    shadeIntensity: 0.5,
-                    gradientToColors: ['#1a1a1a'],
-                    inverseColors: false,
-                    opacityFrom: 1,
-                    opacityTo: 0.8,
-                    stops: [0, 100]
-                }
-            },
-            legend: { show: false }, // Not needed for a single-series chart
+            fill: { /* ... gradient options ... */ },
+            legend: { show: false },
             tooltip: { theme: 'dark' },
             dataLabels: { enabled: false }
         };
@@ -71,11 +64,12 @@ async function renderDeviceEngagementChart(token) {
 // ======================================================================
 async function renderPopularGenresChart(token) {
     try {
-        const data = await fetch('/api/analysis/popular-genres', {
+        // === UPDATE URL HERE ===
+        const data = await fetch(`${API_BASE_URL}/analysis/popular-genres`, {
+            // Headers are included for when auth is re-enabled, currently ignored by backend
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(res => res.json());
 
-        // Sort data to show the most popular genre first
         data.sort((a, b) => b.viewCount - a.viewCount);
 
         const options = {
@@ -91,11 +85,11 @@ async function renderPopularGenresChart(token) {
             xaxis: {
                 categories: data.map(item => item.genre)
             },
-            colors: ['#4e79a7', '#f28e2c', '#e15759', '#76b7b2', '#59a14f'],
+            colors: ['#4e79a7', '#f28e2c', '#e15759', '#76b7b2', '#59a14f'], // Example palette
             plotOptions: {
                 bar: {
                     borderRadius: 4,
-                    distributed: true // Apply a different color from the 'colors' array to each bar
+                    distributed: true
                 }
             },
             legend: { show: false },

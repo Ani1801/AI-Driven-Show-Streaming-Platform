@@ -187,8 +187,11 @@
         <p id="authFooterText">Don't have an account? <a href="#" id="authToggle">Sign up here</a></p>
     </div>
 </div>
-
 <script>
+    // === DEFINE YOUR LIVE BACKEND URL ===
+    const API_BASE_URL = 'https://ai-driven-show-streaming-platform-1.onrender.com/api';
+
+    // Get references to DOM elements
     const tabButtons = document.querySelectorAll('.tab-button');
     const signupFields = document.getElementById('signupFields');
     const signupPasswordConfirm = document.getElementById('signupPasswordConfirm');
@@ -199,7 +202,7 @@
 
     let isSignUp = false;
 
-    // Tab switching
+    // --- Tab Switching Logic ---
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             tabButtons.forEach(btn => btn.classList.remove('active'));
@@ -209,7 +212,7 @@
         });
     });
 
-    // Toggle Sign In / Sign Up
+    // --- Toggle Sign In / Sign Up View ---
     function toggleAuthMode(signUp) {
         isSignUp = signUp;
         if (signUp) {
@@ -223,18 +226,21 @@
             submitButtonText.textContent = 'Sign In';
             authFooterText.innerHTML = 'Don\'t have an account? <a href="#" id="authToggle">Sign up here</a>';
         }
-        
-        // Re-attach toggle click listener
+
+        // Re-attach the toggle link listener within the footer
         const currentAuthToggle = document.getElementById('authToggle');
         if (currentAuthToggle) {
-            currentAuthToggle.addEventListener('click', e => {
+            // Remove previous listener to avoid duplicates if any
+            currentAuthToggle.replaceWith(currentAuthToggle.cloneNode(true));
+            // Add new listener
+            document.getElementById('authToggle').addEventListener('click', e => {
                 e.preventDefault();
-                toggleAuthMode(!isSignUp);
+                toggleAuthMode(!isSignUp); // Toggle the mode
             });
         }
     }
 
-    // Show / hide password
+    // --- Show/Hide Password Logic ---
     document.querySelectorAll('.password-toggle').forEach(btn => {
         btn.addEventListener('click', () => {
             const input = btn.previousElementSibling;
@@ -242,34 +248,38 @@
         });
     });
 
-    // Form submit
+    // --- Form Submission Handler ---
     authForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        submitButton.classList.add('loading');
+        submitButton.classList.add('loading'); // Show loading state
 
+        // Get form values
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         let fullName, confirmPassword;
+        let payload;
 
+        // === UPDATE URL LOGIC HERE ===
+        // Determine the correct API endpoint based on signup/signin mode
+        const endpoint = isSignUp
+            ? `${API_BASE_URL}/auth/signup`
+            : `${API_BASE_URL}/auth/login`;
+
+        // Prepare payload based on mode
         if (isSignUp) {
             fullName = document.getElementById("fullName").value;
             confirmPassword = document.getElementById("confirmPassword").value;
-
             if (password !== confirmPassword) {
                 alert("Passwords do not match");
                 submitButton.classList.remove('loading');
                 return;
             }
+            payload = { fullName, email, password, confirmPassword }; // Include confirmPassword for backend validation if needed
+        } else {
+            payload = { email, password };
         }
-        
-        const endpoint = isSignUp 
-    ? 'http://localhost:5000/api/auth/signup' 
-    : 'http://localhost:5000/api/auth/login';
-        
-        const payload = isSignUp 
-            ? { fullName, email, password,confirmPassword } 
-            : { email, password };
 
+        // --- Make API Request ---
         try {
             const res = await fetch(endpoint, {
                 method: 'POST',
@@ -278,40 +288,39 @@
             });
             const data = await res.json();
 
-            if (res.ok) {
+            if (res.ok) { // Check if response status is 2xx
                 if (isSignUp) {
                     alert(data.message || "Account created successfully! Please sign in.");
+                    // Switch to sign-in tab automatically after successful signup
                     document.querySelector('.tab-button[data-tab="signin"]').click();
                 } else {
-                    // This is the successful login block
+                    // Successful Login
                     localStorage.setItem('auth_token', data.token);
                     if (data.user) {
-                        // ==========================================================
-                        // === THIS IS THE ONLY LINE THAT WAS ADDED - THE CRUCIAL FIX ===
                         localStorage.setItem('user_id', data.user.id || data.user._id);
-                        // ==========================================================
-                        
                         localStorage.setItem('user_full_name', data.user.fullName || '');
                         localStorage.setItem('user_email', data.user.email || '');
-                        localStorage.setItem('user_phone', data.user.phone || '');
-                        localStorage.setItem('user_avatar', data.user.avatarUrl || '');
-                        localStorage.setItem('user_bio', data.user.bio || '');
+                        // Add any other user details you need to store
                     }
                     alert(data.message || "Login successful!");
-                    window.location.href = data.redirectTo || '../index.html';
+                    // Use the redirect path provided by the backend
+                    window.location.href = data.redirectTo || '../index.html'; // Redirect based on role
                 }
             } else {
-                alert(data.message || "An error occurred. Please check your credentials.");
+                // Handle errors (e.g., 400 Bad Request, 500 Server Error)
+                alert(data.message || "An error occurred. Please check your details.");
             }
         } catch (err) {
+            // Handle network errors
             console.error("Network or server connection error:", err);
-            alert("Server error. Please ensure your backend is running and reachable.");
+            alert("Connection error. Please check your network or try again later.");
         } finally {
+            // Always remove loading state
             submitButton.classList.remove('loading');
         }
     });
 
-    // Initial setup to ensure authToggle link works on page load
+    // Initial setup: Ensure the toggle link works and show the Sign In form by default
     toggleAuthMode(false);
 </script>
 </body>

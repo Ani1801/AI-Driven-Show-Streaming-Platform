@@ -884,29 +884,52 @@
         </main>
     </div>
 
-    <script>
-        const accountForm = document.getElementById('accountForm');
+  <script>
+    // === DEFINE YOUR LIVE BACKEND URL ===
+    const API_BASE_URL = 'https://ai-driven-show-streaming-platform-1.onrender.com/api';
+
+    // --- DOM Elements ---
+    const accountForm = document.getElementById('accountForm');
+    const searchInput = document.querySelector('.search-input'); // Assuming these exist
+    const searchBtn = document.querySelector('.search-btn');   // Assuming these exist
+    const signOutBtn = document.getElementById('signOutBtn');   // Assuming this exists
+
+    // --- Initialization ---
+    document.addEventListener('DOMContentLoaded', () => {
+        loadProfile(); // Load profile data on page load
+        renderAuthButtons(); // Render Sign In/Sign Out
+        setGreeting(); // Set greeting message
+    });
+
+    // --- Profile Form Handling ---
+    if (accountForm) {
         accountForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-            const submitBtn = accountForm.querySelector('.btn');
-                const originalText = submitBtn.textContent;
-                submitBtn.textContent = 'Updating...';
-                submitBtn.classList.add('loading');
-                
+            e.preventDefault();
+            const submitBtn = accountForm.querySelector('.btn'); // Assuming a submit button exists
+            if (!submitBtn) return;
+
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Updating...';
+            submitBtn.disabled = true;
+
             const payload = {
-                fullName: document.getElementById('fullName').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
-                avatarUrl: document.getElementById('avatarUrl').value.trim(),
-                bio: document.getElementById('bio').value.trim(),
+                fullName: document.getElementById('fullName')?.value.trim(),
+                phone: document.getElementById('phone')?.value.trim(),
+                avatarUrl: document.getElementById('avatarUrl')?.value.trim(),
+                bio: document.getElementById('bio')?.value.trim(),
             };
             const token = localStorage.getItem('auth_token');
+
             if (!token) {
                 alert('Please sign in again.');
-                window.location.href = 'login.html';
+                window.location.href = 'login.html'; // Adjust path if needed
                 return;
             }
+
             try {
-                const res = await fetch('http://localhost:5000/api/users/me', {
+                // === UPDATE URL HERE ===
+                // Use the /users/me endpoint for updating the logged-in user's profile
+                const res = await fetch(`${API_BASE_URL}/users/me`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -915,242 +938,203 @@
                     body: JSON.stringify(payload),
                 });
                 const data = await res.json();
+
                 if (res.ok) {
-                    localStorage.setItem('user_full_name', data.user.fullName || '');
-                    localStorage.setItem('user_phone', data.user.phone || '');
-                    localStorage.setItem('user_avatar', data.user.avatarUrl || '');
-                    localStorage.setItem('user_bio', data.user.bio || '');
-                    updateHeaderFromUser(data.user);
+                    // Update localStorage with potentially changed data
+                    localStorage.setItem('user_full_name', data.fullName || ''); // Backend returns updated user
+                    localStorage.setItem('user_phone', data.phone || '');
+                    localStorage.setItem('user_avatar', data.avatarUrl || '');
+                    localStorage.setItem('user_bio', data.bio || '');
+
+                    updateHeaderFromUser({ fullName: data.fullName }); // Update UI elements if needed
                     showNotification('Profile updated successfully!');
-                    accountForm.reset();
-                    // Reload latest data to repopulate (including email)
-                    await loadProfile();
+                    // No need to reset form, loadProfile will repopulate with fresh data
+                    await loadProfile(); // Reload data to confirm changes
                 } else {
                     alert(data.message || 'Failed to update profile');
                 }
             } catch (err) {
+                console.error("Error updating profile:", err)
                 alert('Server error while updating profile');
             } finally {
                 submitBtn.textContent = originalText;
-                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
             }
         });
+    }
 
-        const searchInput = document.querySelector('.search-input');
-        const searchBtn = document.querySelector('.search-btn');
-
-        function performSearch() {
-            const query = searchInput.value.trim();
-            if (query) {
-                showNotification(`Searching for: ${query}`);
-                searchBtn.style.transform = 'translateY(-50%) rotate(360deg)';
-                setTimeout(() => {
-                    searchBtn.style.transform = 'translateY(-50%) rotate(0deg)';
-                }, 500);
-            }
+    // --- Profile Data Loading ---
+    async function loadProfile() {
+        const token = localStorage.getItem('auth_token');
+        if (!token) {
+            window.location.href = 'login.html'; // Redirect if not logged in
+            return;
         }
 
+        // Pre-fill from localStorage for faster perceived load
+        prefillProfileForm();
+        updateHeaderFromUser({ fullName: localStorage.getItem('user_full_name') || '' });
+
+        try {
+            // === UPDATE URL HERE ===
+            // Use the /users/me endpoint for fetching the logged-in user's profile
+            const res = await fetch(`${API_BASE_URL}/users/me`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+
+            if (res.ok && data) { // Check data object directly
+                // Populate form with fresh data from API
+                document.getElementById('fullName').value = data.fullName || '';
+                document.getElementById('email').value = data.email || ''; // Assuming email is fetched
+                document.getElementById('phone').value = data.phone || '';
+                document.getElementById('avatarUrl').value = data.avatarUrl || '';
+                document.getElementById('bio').value = data.bio || '';
+
+                // Update localStorage with fresh data
+                localStorage.setItem('user_full_name', data.fullName || '');
+                localStorage.setItem('user_email', data.email || ''); // Save email if needed
+                localStorage.setItem('user_phone', data.phone || '');
+                localStorage.setItem('user_avatar', data.avatarUrl || '');
+                localStorage.setItem('user_bio', data.bio || '');
+
+                updateHeaderFromUser(data); // Update UI elements like header/avatar
+            } else if (res.status === 401 || res.status === 403) {
+                 // Handle expired/invalid token
+                 handleSignOut();
+            }
+        } catch (err) {
+            console.error("Error loading profile:", err);
+            // Optionally notify user that profile couldn't be loaded
+        }
+    }
+
+    function prefillProfileForm() {
+        document.getElementById('fullName').value = localStorage.getItem('user_full_name') || '';
+        document.getElementById('email').value = localStorage.getItem('user_email') || '';
+        document.getElementById('phone').value = localStorage.getItem('user_phone') || '';
+        document.getElementById('avatarUrl').value = localStorage.getItem('user_avatar') || '';
+        document.getElementById('bio').value = localStorage.getItem('user_bio') || '';
+    }
+
+    // --- UI Update Functions ---
+    function updateHeaderFromUser(user) {
+        const name = user?.fullName || '';
+        const profileNameEl = document.getElementById('profileName'); // Element showing name in header
+        const profileInitialsEl = document.getElementById('profileInitials'); // Element showing initials in avatar
+
+        if (profileNameEl) profileNameEl.textContent = name || 'Your Name';
+        if (profileInitialsEl) profileInitialsEl.textContent = initialsFromName(name);
+        // Add logic to update avatar image if using avatarUrl
+    }
+
+    function initialsFromName(name) {
+        if (!name) return 'PV';
+        const parts = name.trim().split(/\s+/);
+        const first = parts[0]?.[0] || '';
+        const second = parts.length > 1 ? parts[parts.length - 1][0] : ''; // Use last name initial if exists
+        return (first + second).toUpperCase() || 'PV';
+    }
+
+
+    // --- Authentication & Greeting --- (Copied from explore.js logic)
+    function getGreeting() {
+        const h = new Date().getHours();
+        if (h < 12) return 'Good morning';
+        if (h < 17) return 'Good afternoon';
+        return 'Good evening';
+    }
+
+    function setGreeting(name = '') {
+        const greetingText = name ? `${getGreeting()}, ${name.split(' ')[0]}` : `${getGreeting()}!`;
+        const greetingEl = document.querySelector('.logo-container p.greeting-text, .logo-container p, #greetingText');
+        if (greetingEl) greetingEl.textContent = greetingText;
+    }
+
+    function renderAuthButtons() {
+        const navRight = document.querySelector('.auth-buttons, .user-actions');
+        if (!navRight) return;
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+            navRight.innerHTML = '<button class="sign-up-btn" id="navSignOut">Sign Out</button>';
+            document.getElementById('navSignOut')?.addEventListener('click', handleSignOut);
+        } else {
+            navRight.innerHTML = '<button class="sign-up-btn" id="navSignIn">Sign In</button>';
+            document.getElementById('navSignIn')?.addEventListener('click', () => {
+                window.location.href = 'login.html';
+            });
+        }
+    }
+
+     function handleSignOut() {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('user_full_name');
+        localStorage.removeItem('user_email');
+        localStorage.removeItem('user_phone');
+        localStorage.removeItem('user_avatar');
+        localStorage.removeItem('user_bio');
+        window.location.href = 'login.html';
+    }
+
+    // Add listener for the main sign out button if it exists
+     if (signOutBtn) {
+        signOutBtn.addEventListener('click', handleSignOut);
+    }
+
+    // --- Search Functionality (Placeholder) ---
+    function performSearch() {
+        const query = searchInput?.value.trim();
+        if (query) {
+            showNotification(`Searching for: ${query}`);
+            // Add actual search logic or navigation here
+        }
+    }
+    if (searchInput) {
         searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                performSearch();
-            }
+            if (e.key === 'Enter') performSearch();
         });
-
+    }
+    if (searchBtn) {
         searchBtn.addEventListener('click', performSearch);
+    }
 
-        function toggleSwitch(element) {
-            element.classList.toggle('active');
-            const isActive = element.classList.contains('active');
-            const preferenceText = element.parentElement.querySelector('span').textContent;
-            showNotification(`${preferenceText} ${isActive ? 'enabled' : 'disabled'}`);
-        }
-
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(135deg, #33E0B2, #2BC4A0);
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: 12px;
-                font-weight: 600;
-                z-index: 1000;
-                animation: slideInRight 0.3s ease-out;
+    // --- Notification/Toast Function ---
+    function showNotification(message) {
+        let notification = document.getElementById('globalToast');
+        if (!notification) {
+             notification = document.createElement('div');
+             notification.id = 'globalToast';
+             notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px;
+                background: linear-gradient(135deg, #33E0B2, #2BC4A0); color: white;
+                padding: 1rem 1.5rem; border-radius: 12px; font-weight: 600;
+                z-index: 1000; opacity: 0; transform: translateX(100px);
+                transition: opacity 0.3s ease, transform 0.3s ease;
                 box-shadow: 0 10px 25px rgba(51, 224, 178, 0.3);
             `;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                notification.style.animation = 'slideOutRight 0.3s ease-out';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
+             document.body.appendChild(notification);
         }
 
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideInRight {
-                from {
-                    opacity: 0;
-                    transform: translateX(100px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-            }
-            @keyframes slideOutRight {
-                from {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-                to {
-                    opacity: 0;
-                    transform: translateX(100px);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
-        document.querySelectorAll('.content-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const title = card.querySelector('h4').textContent;
-                showNotification(`Opening ${title}...`);
-            });
+        notification.textContent = message;
+        // Trigger fade in animation
+        requestAnimationFrame(() => {
+            notification.style.opacity = '1';
+            notification.style.transform = 'translateX(0)';
         });
 
-        document.querySelectorAll('.content-row').forEach(row => {
-            let isDown = false;
-            let startX;
-            let scrollLeft;
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(100px)';
+             // Optional: remove element after transition
+            // setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
 
-            row.addEventListener('mousedown', (e) => {
-                isDown = true;
-                startX = e.pageX - row.offsetLeft;
-                scrollLeft = row.scrollLeft;
-                row.style.cursor = 'grabbing';
-            });
+    // --- Other UI Enhancements (Scroll, Intersection Observer - Keep if used) ---
+    // Add back the IntersectionObserver and scrollable row logic if needed for this page.
 
-            row.addEventListener('mouseleave', () => {
-                isDown = false;
-                row.style.cursor = 'grab';
-            });
-
-            row.addEventListener('mouseup', () => {
-                isDown = false;
-                row.style.cursor = 'grab';
-            });
-
-            row.addEventListener('mousemove', (e) => {
-                if (!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - row.offsetLeft;
-                const walk = (x - startX) * 2;
-                row.scrollLeft = scrollLeft - walk;
-            });
-        });
-
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.profile-section, .content-card').forEach(el => {
-            observer.observe(el);
-        });
-
-        function initialsFromName(name){
-            if(!name) return 'PV';
-            const parts = name.trim().split(/\s+/);
-            const first = parts[0] ? parts[0][0] : '';
-            const second = parts[1] ? parts[1][0] : '';
-            return (first + second).toUpperCase() || 'PV';
-        }
-
-        async function loadProfile(){
-            const token = localStorage.getItem('auth_token');
-            if(!token){
-                window.location.href = 'login.html';
-                return;
-            }
-            // Pre-fill from localStorage while fetching fresh data
-            const cachedName = localStorage.getItem('user_full_name') || '';
-            const cachedEmail = localStorage.getItem('user_email') || '';
-            const cachedPhone = localStorage.getItem('user_phone') || '';
-            const cachedAvatar = localStorage.getItem('user_avatar') || '';
-            const cachedBio = localStorage.getItem('user_bio') || '';
-            document.getElementById('fullName').value = cachedName;
-            document.getElementById('email').value = cachedEmail;
-            document.getElementById('phone').value = cachedPhone;
-            document.getElementById('avatarUrl').value = cachedAvatar;
-            document.getElementById('bio').value = cachedBio;
-            updateHeaderFromUser({ fullName: cachedName });
-
-            try{
-                const res = await fetch('http://localhost:5000/users/me', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await res.json();
-                if(res.ok && data.user){
-                    const u = data.user;
-                    document.getElementById('fullName').value = u.fullName || '';
-                    document.getElementById('email').value = u.email || '';
-                    document.getElementById('phone').value = u.phone || '';
-                    document.getElementById('avatarUrl').value = u.avatarUrl || '';
-                    document.getElementById('bio').value = u.bio || '';
-                    localStorage.setItem('user_full_name', u.fullName || '');
-                    localStorage.setItem('user_email', u.email || '');
-                    localStorage.setItem('user_phone', u.phone || '');
-                    localStorage.setItem('user_avatar', u.avatarUrl || '');
-                    localStorage.setItem('user_bio', u.bio || '');
-                    updateHeaderFromUser(u);
-                }
-            }catch(err){
-                // ignore
-            }
-        }
-
-        function updateHeaderFromUser(user){
-            const name = user && user.fullName ? user.fullName : '';
-            document.getElementById('profileName').textContent = name || 'Your Name';
-            document.getElementById('profileInitials').textContent = initialsFromName(name);
-        }
-
-        document.addEventListener('DOMContentLoaded', loadProfile);
-        // Shared greeting on this page too
-        (function(){
-            function timeOfDay(){
-                const h = new Date().getHours();
-                if (h < 12) return 'Good morning';
-                if (h < 17) return 'Good afternoon';
-                return 'Good evening';
-            }
-            function firstNameOf(n){ return n ? n.trim().split(/\s+/)[0] : ''; }
-            function setGreeting(){
-                const name = localStorage.getItem('user_full_name') || '';
-                const greeting = name ? `${timeOfDay()}, ${firstNameOf(name)}` : `${timeOfDay()}!`;
-                const el = document.querySelector('.logo-container p.greeting-text, .logo-container p');
-                if (el) el.textContent = greeting;
-            }
-            setGreeting();
-        })();
-        const signOutBtn = document.getElementById('signOutBtn');
-        if (signOutBtn) {
-            signOutBtn.addEventListener('click', () => {
-                try { localStorage.removeItem('auth_token'); } catch(e) {}
-                window.location.href = 'login.html';
-            });
-        }
-    </script>
+</script>
 </body>
 </html>

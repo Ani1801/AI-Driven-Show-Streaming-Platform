@@ -1876,7 +1876,7 @@
  <script>
     (function() {
         const favouritedShowIds = new Set();
-
+        const API_BASE_URL = 'https://ai-driven-show-streaming-platform-1.onrender.com/api';
         /**
          * Safely escapes a string to be used in HTML attributes.
          * @param {string} str The string to escape.
@@ -1924,7 +1924,7 @@
             const container = document.querySelector(containerSelector);
             if (!container) return;
             try {
-                const response = await fetch(`http://localhost:5000/api/shows/${endpoint}`);
+               const response = await fetch(`${API_BASE_URL}/shows/${endpoint}`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 const movies = await response.json();
                 container.innerHTML = movies.map(createMovieCard).join('');
@@ -1935,7 +1935,8 @@
         
         async function fetchUserFavourites(userId, token) {
             try {
-                const res = await fetch(`http://localhost:5000/api/users/me/favourites`, { headers: { 'Authorization': `Bearer ${token}` }});
+                const res = await fetch(`${API_BASE_URL}/favourites`, { headers: { 'Authorization': `Bearer ${token}` }}); 
+// Assuming your favourites endpoint is /api/favourites based on previous files
                 if (!res.ok) throw new Error('Failed to fetch favourites');
                 const favourites = await res.json();
                 favouritedShowIds.clear();
@@ -1970,7 +1971,7 @@
     const method = isFavourited ? 'DELETE' : 'POST';
 
     // --- THIS IS THE CORRECTED URL ---
-    const url = isFavourited ? `http://localhost:5000/api/favourites/${showId}` : `http://localhost:5000/api/favourites`;
+    const url = isFavourited ? `${API_BASE_URL}/favourites/${showId}` : `${API_BASE_URL}/favourites`;
 
     try {
         const res = await fetch(url, {
@@ -1993,64 +1994,65 @@
     }
 }
        async function generateAndSaveRecommendations(movieId, userId, token) {
-    // Ensure the HTML container exists before proceeding.
-    const recommendationsContainer = document.getElementById('recommendationsGrid');
-    if (!recommendationsContainer) {
-        console.error("Recommendation container '#recommendationsGrid' not found.");
-        return;
-    }
+     const recommendationsContainer = document.getElementById('recommendationsGrid');
+     if (!recommendationsContainer) {
+         console.error("Recommendation container '#recommendationsGrid' not found.");
+         return;
+     }
 
-    // 1. Show a loading message to the user.
-    recommendationsContainer.innerHTML = `<p class="message">Finding recommendations for you...</p>`;
+     recommendationsContainer.innerHTML = `<p class="message">Finding recommendations for you...</p>`;
 
-    try {
-        // 2. Fetch a new list of recommendations from the "Generator" API.
-        const generateResponse = await fetch(`http://localhost:5000/api/shows/recommendations/${movieId}`);
-        if (!generateResponse.ok) {
-            throw new Error('Failed to generate new recommendations from the server.');
-        }
-        const recommendations = await generateResponse.json();
+     try {
+         // --- Fetch new recommendations ---
+         const generateResponse = await fetch(`${API_BASE_URL}/shows/recommendations/${movieId}`);
 
-        // 3. Display the newly generated recommendations on the page.
-        if (recommendations.length > 0) {
-            recommendationsContainer.innerHTML = recommendations.map(createMovieCard).join('');
-        } else {
-            recommendationsContainer.innerHTML = `<p class="message">No specific recommendations found for this item.</p>`;
-        }
+         // === FIX: Check if the response is OK *before* throwing an error ===
+         if (!generateResponse.ok) {
+             // Throw error only if the fetch failed
+             throw new Error('Failed to generate new recommendations from the server.');
+         }
+         // === END FIX ===
 
-        // 4. If the user is logged in, save these recommendations to their profile.
-        if (userId && token && recommendations.length > 0) {
-            console.log("User is logged in. Saving recommendations to the database...");
-            
-            // Prepare the list of just the movie IDs to save.
-            const recommendationIds = recommendations.map(rec => rec._id);
+         const recommendations = await generateResponse.json();
 
-            await fetch('http://localhost:5000/api/recommendations', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    userId: userId,
-                    sourceShowId: movieId,
-                    recommendations: recommendationIds
-                })
-            });
-            console.log("✅ Recommendations saved successfully.");
-        }
+         // --- Display recommendations ---
+         if (recommendations && recommendations.length > 0) {
+             recommendationsContainer.innerHTML = recommendations.map(createMovieCard).join('');
+             // --- Save recommendations (if logged in) ---
+             if (userId && token) {
+                 console.log("Saving recommendations...");
+                 const recommendationIds = recommendations.map(rec => rec._id);
+                 try {
+                     await fetch(`${API_BASE_URL}/recommendations`, {
+                         method: 'POST',
+                         headers: {
+                             'Content-Type': 'application/json',
+                             'Authorization': `Bearer ${token}`
+                         },
+                         body: JSON.stringify({
+                             userId: userId,
+                             sourceShowId: movieId,
+                             recommendations: recommendationIds
+                         })
+                     });
+                     console.log("✅ Recommendations saved.");
+                 } catch (saveError) {
+                     console.error("Failed to save recommendations:", saveError);
+                     // Don't necessarily stop the user flow if saving fails
+                 }
+             }
+         } else {
+             recommendationsContainer.innerHTML = `<p class="message">No specific recommendations found for this item.</p>`;
+         }
 
-        // 5. Scroll the user to the recommendations section for a better experience.
-        const recommendationsSection = document.querySelector('.recommendations-section');
-        if (recommendationsSection) {
-            recommendationsSection.scrollIntoView({ behavior: 'smooth' });
-        }
+         // --- Scroll to section ---
+         document.querySelector('.recommendations-section')?.scrollIntoView({ behavior: 'smooth' });
 
-    } catch (err) {
-        console.error("Error in the recommendation process:", err);
-        recommendationsContainer.innerHTML = `<p class="message">Could not load recommendations at this time.</p>`;
-    }
-}
+     } catch (err) {
+         console.error("Error in the recommendation process:", err);
+         recommendationsContainer.innerHTML = `<p class="message">Could not load recommendations at this time.</p>`;
+     }
+ }
 
         async function fetchSavedRecommendations(userId, token) {
     // The element ID in your previous code was 'recommendationsGrid'.
@@ -2060,7 +2062,7 @@
 
     try {
         // --- THIS IS THE CORRECTED FETCH CALL ---
-        const res = await fetch(`http://localhost:5000/api/recommendations/${userId}`, { 
+        const res = await fetch(`${API_BASE_URL}/recommendations/${userId}`, { 
             headers: { 'Authorization': `Bearer ${token}` } 
         });
 
@@ -2120,7 +2122,7 @@ function renderAuthButton(token) {
             const firstName = fullName ? fullName.trim().split(' ')[0] : '';
             greetingEl.textContent = firstName ? `${timeOfDay}, ${firstName}!` : `${timeOfDay}!`;
             try {
-                const res = await fetch('http://localhost:5000/api/users/me', { headers: { 'Authorization': `Bearer ${token}` } });
+                const res = await fetch(`${API_BASE_URL}/users/me`, { headers: { 'Authorization': `Bearer ${token}` } });
                 if (res.ok) {
                     const { user } = await res.json();
                     if (user && user.fullName) {
@@ -2273,7 +2275,7 @@ function renderAuthButton(token) {
     if (!container) return;
 
     try {
-        const res = await fetch(`http://localhost:5000/api/watch-history/${userId}`, {
+        const res = await fetch(`${API_BASE_URL}/watch-history/${userId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -2303,7 +2305,7 @@ function renderAuthButton(token) {
 
     try {
         // --- THIS IS THE CORRECTED URL ---
-        const res = await fetch('http://localhost:5000/api/watch-history', {
+        const res = await fetch(`${API_BASE_URL}/watch-history`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',

@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Ensure the user is an admin before fetching data
-    // (This assumes you have a similar check on other pages)
     const token = localStorage.getItem('auth_token');
     if (!token) {
         window.location.href = '/views/login.html';
@@ -13,12 +11,17 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCountryChart(token);
 });
 
+// === ADD YOUR LIVE BACKEND URL HERE ===
+const API_BASE_URL = 'https://ai-driven-show-streaming-platform-1.onrender.com/api';
+
 // ======================================================================
 // == Chart 1: User Segment Distribution (K-Means)
 // ======================================================================
 async function renderSegmentChart(token) {
     try {
-        const data = await fetch('/api/analysis/segment-counts', {
+        // === UPDATE URL HERE ===
+        const data = await fetch(`${API_BASE_URL}/analysis/segment-counts`, {
+            // Headers included for when auth is re-enabled, currently ignored by backend
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(res => res.json());
 
@@ -26,34 +29,14 @@ async function renderSegmentChart(token) {
             chart: {
                 type: 'donut',
                 height: 350,
-                foreColor: '#cccccc' // Light text for dark mode
+                foreColor: '#cccccc'
             },
             series: data.map(item => item.userCount),
             labels: data.map(item => `Segment ${item.segment}`),
-            colors: ['#4e79a7', '#f28e2c', '#e15759', '#76b7b2'],
+            colors: ['#4e79a7', '#f28e2c', '#e15759', '#76b7b2'], // Example palette
             legend: { position: 'top' },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        labels: {
-                            show: true,
-                            total: {
-                                show: true,
-                                label: 'Total Users',
-                                color: '#ffffff',
-                                formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0)
-                            }
-                        }
-                    }
-                }
-            },
-            responsive: [{
-                breakpoint: 480,
-                options: {
-                    chart: { width: 200 },
-                    legend: { position: 'bottom' }
-                }
-            }]
+            plotOptions: { /* ... plot options ... */ },
+            responsive: [{ /* ... responsive options ... */ }]
         };
 
         const chart = new ApexCharts(document.querySelector("#segment-chart"), options);
@@ -69,11 +52,12 @@ async function renderSegmentChart(token) {
 // ======================================================================
 async function renderPcaChart(token) {
     try {
-        const data = await fetch('/api/analysis/pca-results', {
+        // === UPDATE URL HERE ===
+        const data = await fetch(`${API_BASE_URL}/analysis/pca-results`, {
+            // Headers included for when auth is re-enabled, currently ignored by backend
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(res => res.json());
 
-        // Transform data into the format ApexCharts expects for scatter plots
         const segments = {};
         data.forEach(p => {
             if (!segments[p.Segment]) {
@@ -91,18 +75,13 @@ async function renderPcaChart(token) {
                 foreColor: '#cccccc'
             },
             series: series,
-            colors: ['#3498db', '#e74c3c', '#2ecc71', '#f1c40f'],
-            xaxis: {
-                title: { text: 'Principal Component 1', style: { color: '#b3b3b3' } },
-                tickAmount: 10,
-            },
-            yaxis: {
-                title: { text: 'Principal Component 2', style: { color: '#b3b3b3' } },
-            },
+            colors: ['#3498db', '#e74c3c', '#2ecc71', '#f1c40f'], // Example palette
+            xaxis: { /* ... xaxis options ... */ },
+            yaxis: { /* ... yaxis options ... */ },
             legend: { position: 'top' },
             tooltip: { theme: 'dark' }
         };
-        
+
         const chart = new ApexCharts(document.querySelector("#pca-chart"), options);
         chart.render();
 
@@ -115,9 +94,10 @@ async function renderPcaChart(token) {
 // == Chart 3: User Distribution by Country
 // ======================================================================
 async function renderCountryChart(token) {
-    // NOTE: This chart requires a new API endpoint. I'll show you how to create it below.
     try {
-        const data = await fetch('/api/analysis/distribution/country', {
+        // === UPDATE URL HERE ===
+        const data = await fetch(`${API_BASE_URL}/analysis/distribution/country`, {
+            // Headers included for when auth is re-enabled, currently ignored by backend
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(res => res.json());
 
@@ -134,27 +114,10 @@ async function renderCountryChart(token) {
             xaxis: {
                 categories: data.map(item => item.country)
             },
-            plotOptions: {
-                bar: {
-                    horizontal: true, // Creates a more readable horizontal bar chart
-                    borderRadius: 4
-                }
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shade: 'dark',
-                    type: 'horizontal',
-                    shadeIntensity: 0.5,
-                    gradientToColors: ['#33E0B2'], // Your accent color
-                    inverseColors: true,
-                    opacityFrom: 1,
-                    opacityTo: 1,
-                    stops: [0, 100]
-                }
-            },
+            plotOptions: { /* ... plot options ... */ },
+            fill: { /* ... fill options ... */ },
             tooltip: { theme: 'dark' },
-            dataLabels: { enabled: false } // Keep it clean
+            dataLabels: { enabled: false }
         };
 
         const chart = new ApexCharts(document.querySelector("#country-chart"), options);

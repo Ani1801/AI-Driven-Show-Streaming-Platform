@@ -18,13 +18,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setupLogout();
 });
 
+// === ADD YOUR LIVE BACKEND URL HERE ===
+const API_BASE_URL = 'https://ai-driven-show-streaming-platform-1.onrender.com/api';
+
 /**
  * Fetches the current admin's profile data and populates the form.
  */
 async function loadAdminProfile(token, userId) {
     try {
-        // ASSUMPTION: You have a backend route like GET /api/users/profile/:id or /api/users/me
-        const response = await fetch(`/api/users/profile/${userId}`, { // Adjust endpoint if needed
+        // ASSUMPTION: Backend route is GET /api/users/profile/:id (adjust if it's /me)
+        // === UPDATE URL HERE ===
+        const response = await fetch(`${API_BASE_URL}/users/profile/${userId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -41,11 +45,9 @@ async function loadAdminProfile(token, userId) {
         // Populate the profile form fields
         document.getElementById('admin-full-name').value = userData.fullName || '';
         document.getElementById('admin-email').value = userData.email || '';
-        // Typically, email is read-only as it's often the login identifier
 
     } catch (error) {
         console.error('Error loading admin profile:', error);
-        // Display an error message to the user if needed
     }
 }
 
@@ -65,14 +67,15 @@ function setupFormListeners(token, userId) {
         button.disabled = true;
 
         try {
-            // ASSUMPTION: You have a backend route like PUT /api/users/profile/:id
-            const response = await fetch(`/api/users/profile/${userId}`, { // Adjust endpoint if needed
+            // ASSUMPTION: Backend route is PUT /api/users/profile/:id (adjust if it's /me)
+            // === UPDATE URL HERE ===
+            const response = await fetch(`${API_BASE_URL}/users/profile/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ fullName }) // Only send fields that can be updated
+                body: JSON.stringify({ fullName })
             });
 
             if (!response.ok) {
@@ -81,7 +84,7 @@ function setupFormListeners(token, userId) {
             }
 
             alert('Profile updated successfully!');
-            // Optionally update the name displayed in the sidebar/header
+            // Optionally update the name displayed elsewhere
 
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -100,23 +103,21 @@ function setupFormListeners(token, userId) {
         const confirmPassword = document.getElementById('confirm-password').value;
         const button = passwordForm.querySelector('button[type="submit"]');
 
-        // Basic validation
         if (newPassword !== confirmPassword) {
-            alert('New passwords do not match!');
-            return;
+            alert('New passwords do not match!'); return;
         }
         if (!currentPassword || !newPassword) {
-            alert('Please fill in all password fields.');
-            return;
+            alert('Please fill in all password fields.'); return;
         }
 
         button.textContent = 'Updating...';
         button.disabled = true;
 
         try {
-            // ASSUMPTION: You have a backend route like POST /api/users/change-password/:id
-            const response = await fetch(`/api/users/change-password/${userId}`, { // Adjust endpoint
-                method: 'POST', // Or PUT, depending on your backend design
+            // ASSUMPTION: Backend route is POST /api/users/change-password/:id
+            // === UPDATE URL HERE ===
+            const response = await fetch(`${API_BASE_URL}/users/change-password/${userId}`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -130,7 +131,7 @@ function setupFormListeners(token, userId) {
             }
 
             alert('Password updated successfully!');
-            passwordForm.reset(); // Clear the form fields
+            passwordForm.reset();
 
         } catch (error) {
             console.error('Error updating password:', error);
@@ -143,16 +144,15 @@ function setupFormListeners(token, userId) {
 }
 
 /**
- * Sets up the logout button functionality (if needed specifically on this page).
+ * Sets up the logout button functionality.
  */
 function setupLogout() {
-    // Assuming your logout button has id="signOutBtn" like in previous examples
     const signOutBtn = document.getElementById('signOutBtn'); // Ensure this ID exists in your sidebar HTML
     if (signOutBtn) {
         signOutBtn.addEventListener('click', (e) => {
             e.preventDefault();
             localStorage.removeItem('auth_token');
-            localStorage.removeItem('user_id'); // Clear all user-related data
+            localStorage.removeItem('user_id');
             window.location.href = '/views/login.html';
         });
     }
