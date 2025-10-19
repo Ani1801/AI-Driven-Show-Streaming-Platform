@@ -7,9 +7,6 @@ const Profile = require("../models/Profile");
 
 const router = express.Router();
 
-// The duplicate 'auth' function has been removed from here.
-// The signup and login routes below are correct and need no changes.
-
 // Signup route
 router.post("/signup", async (req, res) => {
     try {
@@ -30,6 +27,7 @@ router.post("/signup", async (req, res) => {
             fullName,
             email,
             password: hashedPassword,
+            role: 'user', // ADDED: New users are assigned the 'user' role by default.
         });
 
         await newUser.save();
@@ -57,20 +55,29 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ message: "Invalid email or password" });
         }
 
+        // ======================================================================
+        // === THIS IS THE CRITICAL FIX ===
+        // We MUST add 'role: user.role' to the JWT payload.
         const token = jwt.sign(
-            { id: user._id, email: user.email },
+            { id: user._id, email: user.email, role: user.role }, // <-- FIX IS HERE
             process.env.JWT_SECRET || "your_jwt_secret_key",
             { expiresIn: "7d" }
         );
+        // ======================================================================
+
+        const redirectTo = user.role === 'admin' ? '/views/admin/admin_dashboard.html' : '/index.html';
 
         const profile = await Profile.findOne({ user: user._id });
+        
         res.json({
             message: "Login successful",
             token,
+            redirectTo,
             user: {
                 id: user._id,
                 fullName: user.fullName,
                 email: user.email,
+                role: user.role, // Also good to include here
                 phone: (profile && profile.phone) || "",
                 avatarUrl: (profile && profile.avatarUrl) || "",
                 bio: (profile && profile.bio) || "",

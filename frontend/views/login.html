@@ -298,7 +298,7 @@
                         localStorage.setItem('user_bio', data.user.bio || '');
                     }
                     alert(data.message || "Login successful!");
-                    window.location.href = '../index.html';
+                    window.location.href = data.redirectTo || '../index.html';
                 }
             } else {
                 alert(data.message || "An error occurred. Please check your credentials.");

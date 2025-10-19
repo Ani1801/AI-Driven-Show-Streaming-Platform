@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeVision - Admin Settings</title>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/Streaming_Platform-main/frontend/css/settings.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo">PrimeVision</div>
+        <div class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>User Analytics</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-film"></i>
+            <span>Content Analytics</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Revenue</span>
+        </div>
+        <div class="nav-item active">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div>
+                <div class="user-name">Admin User</div>
+                <div class="user-role">Administrator</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Admin Settings</h1>
+            <div class="date">
+                <script>
+                    document.write(new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+                </script>
+            </div>
+        </div>
+
+        <!-- Profile Settings Section -->
+        <div class="settings-panel">
+            <h2 class="panel-title">Update Profile</h2>
+            <form id="profile-form">
+                <div class="form-group">
+                    <label for="admin-full-name" class="form-label">Full Name</label>
+                    <input type="text" id="admin-full-name" class="form-input" placeholder="Enter your full name" value="Admin User">
+                </div>
+                
+                <div class="form-group">
+                    <label for="admin-email" class="form-label">Email Address</label>
+                    <input type="email" id="admin-email" class="form-input" placeholder="Enter your email address" value="admin@primevision.com" readonly>
+                </div>
+                
+                <button type="submit" class="btn">Save Profile Changes</button>
+            </form>
+        </div>
+
+        <!-- Change Password Section -->
+        <div class="settings-panel">
+            <h2 class="panel-title">Change Password</h2>
+            <form id="password-form">
+                <div class="form-group">
+                    <label for="current-password" class="form-label">Current Password</label>
+                    <input type="password" id="current-password" class="form-input" placeholder="Enter your current password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-password" class="form-label">New Password</label>
+                    <input type="password" id="new-password" class="form-input" placeholder="Enter your new password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password" class="form-label">Confirm New Password</label>
+                    <input type="password" id="confirm-password" class="form-input" placeholder="Confirm your new password">
+                </div>
+                
+                <button type="submit" class="btn">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/Streaming_Platform-main/frontend/js/settings.js"></script>
+</body>
+</html>

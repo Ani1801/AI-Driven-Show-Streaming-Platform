@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeVision - Content & Engagement Analytics</title>
+    <link rel="stylesheet" href="/Streaming_Platform-main/frontend/css/analytics-content.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo">PrimeVision</div>
+        <div class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>User Analytics</span>
+        </div>
+        <div class="nav-item active">
+            <i class="fas fa-film"></i>
+            <span>Content Analytics</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Revenue</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div>
+                <div class="user-name">Admin User</div>
+                <div class="user-role">Administrator</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Content & Engagement Analytics</h1>
+            <div class="date">
+                <script>
+                    document.write(new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+                </script>
+            </div>
+        </div>
+
+        <!-- Chart Grid Section -->
+        <div class="chart-grid">
+            <!-- Engagement by Device Chart -->
+            <div class="chart-panel">
+                <h2 class="chart-title">Engagement by Device</h2>
+                <div class="chart-container" id="device-engagement-chart"></div>
+            </div>
+
+            <!-- Most Popular Genres Chart -->
+            <div class="chart-panel">
+                <h2 class="chart-title">Most Popular Genres</h2>
+                <div class="chart-container" id="popular-genres-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ApexCharts JS (for future chart implementation) -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="js/analytics-content.js"></script>
+</body>
+</html>

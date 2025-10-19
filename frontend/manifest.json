@@ -1,0 +1,20 @@
+{
+    "name": "PrimeVision Streaming",
+    "short_name": "PrimeVision",
+    "icons": [
+        {
+            "src": "/images/interstellar.jpg",
+            "sizes": "192x192",
+            "type": "image/jpeg"
+        },
+        {
+            "src": "/images/breakingbad.avif",
+            "sizes": "512x512",
+            "type": "image/avif"
+        }
+    ],
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#0f1014",
+    "theme_color": "#1a1a2e"
+}

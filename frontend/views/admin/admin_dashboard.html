@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeVision Admin Dashboard</title>
+    <link rel="stylesheet" href="/Streaming_Platform-main/frontend/css/admin_dashboard.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo">PrimeVision</div>
+        <div class="nav-item active">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-film"></i>
+            <span>Shows</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Revenue</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div>
+                <div class="user-name">Admin User</div>
+                <div class="user-role">Administrator</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Dashboard Overview</h1>
+            <div class="date">
+                <script>
+                    document.write(new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+                </script>
+            </div>
+        </div>
+
+        <!-- KPI Cards Section -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">Total Users</div>
+                <div class="kpi-metric" id="total-users-metric">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Total Shows</div>
+                <div class="kpi-metric" id="total-shows-metric">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Total Revenue</div>
+                <div class="kpi-metric" id="total-revenue-metric">$0.00</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Total Watch Time (hrs)</div>
+                <div class="kpi-metric" id="total-watch-time-metric">0</div>
+            </div>
+        </div>
+
+        <!-- Main Content Tables -->
+        <div class="content-grid">
+            <!-- Content Association Rules Table -->
+            <div class="panel">
+                <h2 class="panel-header">Top Content Association Rules</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>If User Watches...</th>
+                            <th>They Also Watch...</th>
+                            <th>Strength (Lift)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rules-table-body">
+                        <!-- Dynamic content will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Recently Added Shows Table -->
+            <div class="panel">
+                <h2 class="panel-header">Recently Added Shows</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Genre</th>
+                            <th>Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-shows-body">
+                        <!-- Dynamic content will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/admin_dashboard.js" ></script>
+</body>
+</html>
